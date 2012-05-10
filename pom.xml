@@ -12,17 +12,11 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <!--<parent>-->
-    <!--<groupId>org.sonatype.oss</groupId>-->
-    <!--<artifactId>oss-parent</artifactId>-->
-    <!--<version>2</version>-->
-    <!--</parent>-->
     <parent>
-        <groupId>com.taobao</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0.1</version>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>2</version>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.taobao</groupId>
     <artifactId>tdhs-java-client</artifactId>
@@ -87,14 +81,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- TCC依赖 元峰 -->
-        <dependency>
-            <groupId>com.taobao.test</groupId>
-            <artifactId>tcc-maven-plugin</artifactId>
-            <version>1.0.3</version>
-            <scope>test</scope>
-        </dependency>
-
         <!--压力测试用 -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -151,20 +137,20 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-gpg-plugin</artifactId>-->
-            <!--<version>1.4</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>sign-artifacts</id>-->
-            <!--<phase>verify</phase>-->
-            <!--<goals>-->
-            <!--<goal>sign</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -184,27 +170,6 @@
                 <version>2.12</version>
                 <configuration>
                     <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-            <!-- TCC插件 元峰 -->
-            <plugin>
-                <groupId>com.taobao.test</groupId>
-                <artifactId>tcc-maven-plugin</artifactId>
-                <version>1.0.3</version>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>instrument</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <teamName>通用产品-中间件</teamName>
-                    <projectName>UTCoverage</projectName>
-                    <appName>TDHS</appName>
-                    <doCleanBeforeTest>false</doCleanBeforeTest>
-                    <recoverClassFileAfterTest>false</recoverClassFileAfterTest>
                 </configuration>
             </plugin>
         </plugins>
