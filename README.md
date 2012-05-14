@@ -7,6 +7,6 @@ TDH_Socket is a MySQL plugin developed by me.
 
 -----------------------------------
 
-Author: Kevin.Huang
-Email:  zephyrleaves@gmail.com
-Date:   2012-5-3
+* Author: Kevin.Huang
+* Email:  zephyrleaves@gmail.com
+* Date:   2012-5-3
