@@ -22,8 +22,9 @@
     <artifactId>tdhs-java-client</artifactId>
     <name>tdhs4j</name>
     <version>0.3.2</version>
-    <packaging>jar</packaging>
     <description>A TDH_SOCKET Client For Java</description>
+    <url>https://github.com/taobao/tdhs-java-client/</url>
+    <packaging>jar</packaging>
     <developers>
         <developer>
             <name>kevin huang</name>
@@ -38,6 +39,11 @@
             <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
         </license>
     </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:taobao/tdhs-java-client.git</connection>
+        <developerConnection>scm:git:git@github.com:taobao/tdhs-java-client.git</developerConnection>
+        <url>git@github.com:taobao/tdhs-java-client.git</url>
+    </scm>
 
     <dependencies>
         <dependency>
