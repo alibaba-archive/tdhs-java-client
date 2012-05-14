@@ -1,7 +1,7 @@
 Introduction
 ============
 
-TDHS-JAVA-CLIENT is a practical TDH_Socket client for Java.
+TDHS-JAVA-CLIENT is a practical TDH_Socket(https://github.com/taobao/TDH_Socket) client for Java.
 TDH_Socket is a MySQL plugin developed by me.
 
 
