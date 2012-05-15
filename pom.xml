@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>2</version>
+        <version>7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.taobao</groupId>
@@ -39,10 +39,11 @@
             <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
         </license>
     </licenses>
+
     <scm>
-        <connection>scm:git:git@github.com:taobao/tdhs-java-client.git</connection>
-        <developerConnection>scm:git:git@github.com:taobao/tdhs-java-client.git</developerConnection>
-        <url>git@github.com:taobao/tdhs-java-client.git</url>
+        <connection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/trunk/</connection>
+        <developerConnection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/trunk/</developerConnection>
+        <url>http://code.taobao.org/svn/tdhs-java-client/trunk/</url>
     </scm>
 
     <dependencies>
