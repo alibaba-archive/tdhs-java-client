@@ -60,7 +60,8 @@ public class TDHSClientImpl implements TDHSClient {
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
      *
      * @param address of type InetSocketAddress
-     * @param props of type Map
+     * @param props   of type Map
+     *
      * @throws TDHSException when
      */
     public TDHSClientImpl(InetSocketAddress address, Map props) throws TDHSException {
@@ -76,8 +77,9 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
      *
-     * @param address of type InetSocketAddress
+     * @param address          of type InetSocketAddress
      * @param connectionNumber of type int
+     *
      * @throws TDHSException when
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber) throws TDHSException {
@@ -87,9 +89,10 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
      *
-     * @param address of type InetSocketAddress
+     * @param address          of type InetSocketAddress
      * @param connectionNumber of type int
-     * @param timeOut of type int
+     * @param timeOut          of type int
+     *
      * @throws TDHSException when
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut) throws TDHSException {
@@ -99,11 +102,12 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
      *
-     * @param address of type InetSocketAddress
+     * @param address          of type InetSocketAddress
      * @param connectionNumber of type int
-     * @param timeOut of type int
-     * @param needReconnect of type boolean
-     * @param connectTimeOut of type int
+     * @param timeOut          of type int
+     * @param needReconnect    of type boolean
+     * @param connectTimeOut   of type int
+     *
      * @throws TDHSException when
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
@@ -114,14 +118,15 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
      *
-     * @param address of type InetSocketAddress
+     * @param address          of type InetSocketAddress
      * @param connectionNumber of type int
-     * @param timeOut of type int
-     * @param needReconnect of type boolean
-     * @param connectTimeOut of type int
-     * @param charestName of type String
-     * @param readCode of type String
-     * @param writeCode of type String
+     * @param timeOut          of type int
+     * @param needReconnect    of type boolean
+     * @param connectTimeOut   of type int
+     * @param charestName      of type String
+     * @param readCode         of type String
+     * @param writeCode        of type String
+     *
      * @throws TDHSException when
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
@@ -141,27 +146,21 @@ public class TDHSClientImpl implements TDHSClient {
         parameters.setConnectionNumber(connectionNumber);
         parameters.setNeedReconnect(needReconnect);
         tdhsNet.initNet(parameters, protocol.shakeHandPacket(this.timeOut, readCode, writeCode), responses);
-        if (!awaitForConnected(connectTimeOut, TimeUnit.MILLISECONDS)) {
+        if (connectTimeOut > 0 && !awaitForConnected(connectTimeOut, TimeUnit.MILLISECONDS)) {
             throw new TDHSTimeoutException("connect time out");
         }
     }
 
 
     /**
-     * Method awaitForConnected ...
-     *
-     * @param timeout of type long
-     * @param unit of type TimeUnit
-     * @return boolean
+     * @see TDHSClient#awaitForConnected(long, TimeUnit)
      */
-    private boolean awaitForConnected(long timeout, TimeUnit unit) {
+    public boolean awaitForConnected(long timeout, TimeUnit unit) {
         return tdhsNet.awaitForConnected(timeout, unit);
     }
 
     /**
      * Method getCharestName returns the charestName of this TDHSClientImpl object.
-     *
-     *
      *
      * @return the charestName (type String) of this TDHSClientImpl object.
      */
@@ -172,10 +171,7 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Method setCharestName sets the charestName of this TDHSClientImpl object.
      *
-     *
-     *
      * @param charestName the charestName of this TDHSClientImpl object.
-     *
      */
     public void setCharestName(String charestName) {
         this.charestName = charestName;
@@ -183,6 +179,7 @@ public class TDHSClientImpl implements TDHSClient {
 
     /**
      * Method createStatement ...
+     *
      * @return Statement
      */
     public Statement createStatement() {
@@ -193,6 +190,7 @@ public class TDHSClientImpl implements TDHSClient {
      * Method createStatement ...
      *
      * @param hash of type int
+     *
      * @return Statement
      */
     public Statement createStatement(int hash) {
@@ -201,6 +199,7 @@ public class TDHSClientImpl implements TDHSClient {
 
     /**
      * Method createBatchStatement ...
+     *
      * @return BatchStatement
      */
     public BatchStatement createBatchStatement() {
@@ -210,12 +209,14 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Method get ...
      *
-     * @param db of type String
-     * @param table of type String
-     * @param index of type String
+     * @param db     of type String
+     * @param table  of type String
+     * @param index  of type String
      * @param fields of type String[]
-     * @param keys of type String[][]
+     * @param keys   of type String[][]
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     // just get one
@@ -229,16 +230,18 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Method get ...
      *
-     * @param db of type String
-     * @param table of type String
-     * @param index of type String
-     * @param fields of type String[]
-     * @param keys of type String[][]
+     * @param db       of type String
+     * @param table    of type String
+     * @param index    of type String
+     * @param fields   of type String[]
+     * @param keys     of type String[][]
      * @param findFlag of type FindFlag
-     * @param start of type int
-     * @param limit of type int
-     * @param filters of type Filter[]
+     * @param start    of type int
+     * @param limit    of type int
+     * @param filters  of type Filter[]
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse get(@NotNull String db, @NotNull String table, @Nullable String index, @NotNull String fields[],
@@ -252,7 +255,9 @@ public class TDHSClientImpl implements TDHSClient {
      * Method get ...
      *
      * @param get of type Get
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse get(@NotNull Get get) throws TDHSException {
@@ -262,15 +267,17 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Method count ...
      *
-     * @param db of type String
-     * @param table of type String
-     * @param index of type String
-     * @param keys of type String[][]
+     * @param db       of type String
+     * @param table    of type String
+     * @param index    of type String
+     * @param keys     of type String[][]
      * @param findFlag of type FindFlag
-     * @param start of type int
-     * @param limit of type int
-     * @param filters of type Filter[]
+     * @param start    of type int
+     * @param limit    of type int
+     * @param filters  of type Filter[]
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse count(@NotNull String db, @NotNull String table, String index, @NotNull String[][] keys,
@@ -283,7 +290,9 @@ public class TDHSClientImpl implements TDHSClient {
      * Method count ...
      *
      * @param get of type Get
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse count(@NotNull Get get) throws TDHSException {
@@ -293,15 +302,17 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Method delete ...
      *
-     * @param db of type String
-     * @param table of type String
-     * @param index of type String
-     * @param keys of type String[][]
+     * @param db       of type String
+     * @param table    of type String
+     * @param index    of type String
+     * @param keys     of type String[][]
      * @param findFlag of type FindFlag
-     * @param start of type int
-     * @param limit of type int
-     * @param filters of type Filter[]
+     * @param start    of type int
+     * @param limit    of type int
+     * @param filters  of type Filter[]
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse delete(@NotNull String db, @NotNull String table, String index, @NotNull String keys[][],
@@ -315,7 +326,9 @@ public class TDHSClientImpl implements TDHSClient {
      * Method delete ...
      *
      * @param get of type Get
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse delete(@NotNull Get get) throws TDHSException {
@@ -325,17 +338,19 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Method update ...
      *
-     * @param db of type String
-     * @param table of type String
-     * @param index of type String
-     * @param fields of type String[]
+     * @param db         of type String
+     * @param table      of type String
+     * @param index      of type String
+     * @param fields     of type String[]
      * @param valueEntry of type ValueEntry[]
-     * @param keys of type String[][]
-     * @param findFlag of type FindFlag
-     * @param start of type int
-     * @param limit of type int
-     * @param filters of type Filter[]
+     * @param keys       of type String[][]
+     * @param findFlag   of type FindFlag
+     * @param start      of type int
+     * @param limit      of type int
+     * @param filters    of type Filter[]
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse update(@NotNull String db, @NotNull String table, String index, @NotNull String fields[],
@@ -351,7 +366,9 @@ public class TDHSClientImpl implements TDHSClient {
      * Method update ...
      *
      * @param update of type Update
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse update(@NotNull Update update) throws TDHSException {
@@ -362,11 +379,13 @@ public class TDHSClientImpl implements TDHSClient {
     /**
      * Method insert ...
      *
-     * @param db of type String
-     * @param table of type String
+     * @param db     of type String
+     * @param table  of type String
      * @param fields of type String[]
      * @param values of type String[]
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse insert(@NotNull String db, @NotNull String table, @NotNull String fields[],
@@ -379,7 +398,9 @@ public class TDHSClientImpl implements TDHSClient {
      * Method insert ...
      *
      * @param insert of type Insert
+     *
      * @return TDHSResponse
+     *
      * @throws TDHSException when
      */
     public TDHSResponse insert(@NotNull Insert insert) throws TDHSException {
@@ -388,6 +409,7 @@ public class TDHSClientImpl implements TDHSClient {
 
     /**
      * Method query ...
+     *
      * @return Query
      */
     public Query query() {
@@ -396,6 +418,7 @@ public class TDHSClientImpl implements TDHSClient {
 
     /**
      * Method insert ...
+     *
      * @return Insert
      */
     public com.taobao.tdhs.client.easy.Insert insert() {

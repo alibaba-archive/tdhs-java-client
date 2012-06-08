@@ -14,6 +14,8 @@ package com.taobao.tdhs.client;
 import com.taobao.tdhs.client.statement.BatchStatement;
 import com.taobao.tdhs.client.statement.Statement;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * The TDH_Socket Client interface
  *
@@ -46,6 +48,17 @@ public interface TDHSClient extends Statement {
      * @param charestName the charestName of this TDHSClient object.
      */
     void setCharestName(String charestName);
+
+
+    /**
+     * wait for connected
+     *
+     * @param timeout of type long
+     * @param unit    of type TimeUnit
+     *
+     * @return boolean , <code>true</code> mean connected ,<code>false</code> mean not connected
+     */
+    boolean awaitForConnected(long timeout, TimeUnit unit);
 
     /**
      * Method createStatement ...
