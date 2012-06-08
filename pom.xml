@@ -20,7 +20,7 @@
     <groupId>com.taobao</groupId>
     <artifactId>tdhs-java-client</artifactId>
     <name>tdhs4j</name>
-    <version>0.3.2.1-SNAPSHOT</version>
+    <version>0.3.2.1</version>
     <description>A TDH_SOCKET Client For Java</description>
     <url>https://github.com/taobao/tdhs-java-client/</url>
     <packaging>jar</packaging>
@@ -40,9 +40,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/trunk/</connection>
-        <developerConnection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/trunk/</developerConnection>
-        <url>http://code.taobao.org/svn/tdhs-java-client/trunk/</url>
+        <connection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/tags/tdhs-java-client-0.3.2.1</connection>
+        <developerConnection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/tags/tdhs-java-client-0.3.2.1</developerConnection>
+        <url>http://code.taobao.org/svn/tdhs-java-client/tags/tdhs-java-client-0.3.2.1</url>
     </scm>
 
     <dependencies>
