@@ -39,6 +39,8 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
 
     private final int parameterNumber;
 
+    private final String[] sqlSplited;
+
     private final Map<Integer, String> parameters = new HashMap<Integer, String>();
 
     public TDHSPreparedStatement(Connection connection, TDHSClient client, String db, String sql) throws SQLException {
@@ -47,19 +49,21 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
             throw new SQLException("sql can't be null");
         }
         this.sql = StringUtils.trim(sql);
-        this.parameterNumber = StringUtils.splitPreserveAllTokens(this.sql, "?").length - 1;
+        this.sqlSplited = StringUtils.splitPreserveAllTokens(this.sql, "?");
+        this.parameterNumber = sqlSplited.length - 1;
     }
 
     private String mergeSQL() throws SQLException {
         if (parameters.size() < parameterNumber) {
             throw new SQLException("Don't have enough parameter!");
         }
-        String s = this.sql;
+        StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= parameterNumber; i++) {
-            s = StringUtils.replaceOnce(s, "?", parameters.get(i));
+            sb.append(sqlSplited[i - 1]).append(parameters.get(i));
         }
+        sb.append(sqlSplited[parameterNumber]);
         clearParameters();
-        return s;
+        return sb.toString();
     }
 
     public ResultSet executeQuery() throws SQLException {
