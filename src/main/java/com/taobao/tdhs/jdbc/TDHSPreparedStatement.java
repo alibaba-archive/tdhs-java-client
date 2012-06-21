@@ -119,7 +119,7 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
             x = StringUtils.replace(x, "\\", "\\\\");
             x = StringUtils.replace(x, "\'", "\\\'");
             x = StringUtils.replace(x, "\"", "\\\"");
-            x = "\"" + x + "\"";
+            x = "\'" + x + "\'";
         }
         setDString(parameterIndex, x);
     }

@@ -76,7 +76,7 @@ public class ParseSQLTest {
 
     @Test
     public void test5() {
-        String sql = "insert into test(a,b) values(\"1\",2)";
+        String sql = "insert into test(a,b) values(\';1\',2)";
         ParseSQL parseSQL = new ParseSQL(sql);
         parseSQL.sqlDispatch();
         print(parseSQL);
