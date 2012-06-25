@@ -290,7 +290,7 @@ public class ParseSQL {
     // 分析SQL注入
     public boolean analyzeSqlInjection(String sqlstring) {
         //大多数都是安全的SQL
-        if (sqlstring.indexOf(";") == -1) {
+        if (!sqlstring.contains(";")) {
             return false;
         }
         //检查SQL是否存在多余的;,并且这个;不应出现在value中的
@@ -299,21 +299,70 @@ public class ParseSQL {
         boolean exist_danyinhao = false;
         for (int i = 0; i < sqlstring.length(); i++) {
             //普通字符全部压栈
-            if (sqlstring.substring(i, i + 1).equals("'") == false) {
+            if (!sqlstring.substring(i, i + 1).equals("'")) {
                 stack.push(sqlstring.substring(i, i + 1));
             }
-            //特殊字符
+
+            //特殊字符'
             if (sqlstring.substring(i, i + 1).equals("'")) {
-                if (exist_danyinhao == false) {
-                    exist_danyinhao = true;
-                    stack.push(sqlstring.substring(i, i + 1));
-                } else {
-                    //弹出栈,直到遇到另外一个'为止
-                    while (!stack.pop().equals("'")) {
-                        ;
-                    }
-                    exist_danyinhao = false;
+                //判断是否使用了转义字符\,往前推,看看有没有连续出现的\,是奇数个,还是偶数个?
+                int count = 0;
+                int k = i;
+                boolean real_danyinhao;
+                while (k - 1 >= 0 && sqlstring.substring(k - 1, k).equals("\\")) {
+                    k--;
+                    count++;
                 }
+                if (count % 2 == 0) {
+                    //这是一个单引号
+                    real_danyinhao = true;
+                } else {
+                    //这不是一个单引号,是value的一部份
+                    real_danyinhao = false;
+                    stack.push(sqlstring.substring(i, i + 1));
+                }
+                if (real_danyinhao) {
+                    if (!exist_danyinhao) {
+                        exist_danyinhao = true;
+                        stack.push(sqlstring.substring(i, i + 1));
+                    } else {
+                        boolean find_real_danyinhao = false;
+                        while (!find_real_danyinhao) {
+                            while (!stack.pop().equals("'")) {
+                            }
+                            //这里检查是否是一个真正的单引号,数前面连续\的个数
+                            if (stack.peek().equals("\\")) {
+                                //这种情况,有可能是真正的单引号
+                                count = 0;
+                                while (stack.peek().equals("\\")) {
+                                    stack.pop();
+                                    count++;
+                                }
+                                if (count % 2 == 0) {
+                                    //这是一个真正的引号
+                                    find_real_danyinhao = true;
+                                } else {
+                                    //要继续出栈
+                                    find_real_danyinhao = false;
+                                }
+                            } else {
+                                //退出整个大循环
+                                find_real_danyinhao = true;
+                            }
+
+
+                        }
+
+
+                        /*//弹出栈,直到遇到另外一个真正的'为止
+                              while(!stack.pop().equals("'")){
+                                  ;
+                              }*/
+
+                        exist_danyinhao = false;
+                    }
+                }
+
             }
         }//end for
 
