@@ -287,19 +287,17 @@ public class ParseSQL {
         return list;
     }
 
-    // 分析SQL注入
-    public boolean analyzeSqlInjection(String sqlstring) {
-        //大多数都是安全的SQL
-        if (!sqlstring.contains(";")) {
-            return false;
-        }
-        //检查SQL是否存在多余的;,并且这个;不应出现在value中的
-        //即不考虑两个单引号中的;
+    /*
+      * parameter 在sqlstring中搜索searchStr,看其是否存在,这个searchStr不能存在''中
+      */
+    private boolean checkSpecialStr(String sqlstring, String searchStr) {
+
+        //即不考虑两个单引号中的searchStr
         Stack<String> stack = new Stack<String>();
         boolean exist_danyinhao = false;
         for (int i = 0; i < sqlstring.length(); i++) {
             //普通字符全部压栈
-            if (!sqlstring.substring(i, i + 1).equals("'")) {
+            if (sqlstring.substring(i, i + 1).equals("'") == false) {
                 stack.push(sqlstring.substring(i, i + 1));
             }
 
@@ -309,10 +307,11 @@ public class ParseSQL {
                 int count = 0;
                 int k = i;
                 boolean real_danyinhao;
-                while (k - 1 >= 0 && sqlstring.substring(k - 1, k).equals("\\")) {
+                while (k - 1 >= 0 && sqlstring.substring(k - 1, k).equals("\\") == true) {
                     k--;
                     count++;
                 }
+                //System.out.println("\\个数为:"+count);
                 if (count % 2 == 0) {
                     //这是一个单引号
                     real_danyinhao = true;
@@ -321,17 +320,18 @@ public class ParseSQL {
                     real_danyinhao = false;
                     stack.push(sqlstring.substring(i, i + 1));
                 }
-                if (real_danyinhao) {
-                    if (!exist_danyinhao) {
+                if (real_danyinhao == true) {
+                    if (exist_danyinhao == false) {
                         exist_danyinhao = true;
                         stack.push(sqlstring.substring(i, i + 1));
                     } else {
                         boolean find_real_danyinhao = false;
-                        while (!find_real_danyinhao) {
+                        while (find_real_danyinhao == false) {
                             while (!stack.pop().equals("'")) {
+                                ;
                             }
                             //这里检查是否是一个真正的单引号,数前面连续\的个数
-                            if (stack.peek().equals("\\")) {
+                            if (stack.isEmpty() == false && stack.peek().equals("\\")) {
                                 //这种情况,有可能是真正的单引号
                                 count = 0;
                                 while (stack.peek().equals("\\")) {
@@ -350,14 +350,7 @@ public class ParseSQL {
                                 find_real_danyinhao = true;
                             }
 
-
                         }
-
-
-                        /*//弹出栈,直到遇到另外一个真正的'为止
-                              while(!stack.pop().equals("'")){
-                                  ;
-                              }*/
 
                         exist_danyinhao = false;
                     }
@@ -366,15 +359,28 @@ public class ParseSQL {
             }
         }//end for
 
+
         logger.debug(stack.toString());
-        //检查栈是否为空,不为空，则出现了;
-        if (stack.search(";") > -1) {
+
+        if (stack.isEmpty() == false && stack.search(searchStr) > -1) {
             stack.clear();
             return true;
         } else {
             return false;
         }
     }
+
+    // 分析SQL注入
+    public boolean analyzeSqlInjection(String sqlstring) {
+        //大多数都是安全的SQL
+        if (sqlstring.indexOf(";") == -1) {
+            return false;
+        }
+
+        return checkSpecialStr(sqlstring, ";");
+
+    }
+
 
     // 分析一个SQL的类型select,insert,update,delete
     public void sqlDispatch() {
@@ -622,16 +628,72 @@ public class ParseSQL {
         logger.debug("where condition:" + whereStr);
     }
 
+    public boolean checkRealEqual(Stack<String> stack) {
+        logger.debug("checkRealEqual:" + stack.toString());
+        String tmp_str = "";
+        @SuppressWarnings("unchecked")
+        Stack<String> tmpStack = (Stack<String>) stack.clone();
+        while (tmpStack.isEmpty() == false) {
+            tmp_str = tmpStack.pop() + tmp_str;
+        }
+
+        //如果没有分号',说明是真正的等号,如果不是,则是value值的一部份
+        boolean result = !checkSpecialStr(tmp_str, "'");
+        logger.debug(result ? "这是真正的=号" : "这不是真正的=号");
+        return result;
+    }
+
+    /*
+      * 分析update set语句中的column,以及value,要注意value中的,
+      * ,不能直接作为分隔符
+      */
     private void analyzeUpdateSetColumns(String substring) {
         if (substring == null)
             return;
-        String[] array_setColumn = substring.split(",");
-        for (String setColumn : array_setColumn) {
-            int addr = StringUtils.indexOfIgnoreCase(setColumn, "=");
-            String column = setColumn.substring(0, addr).trim();
-            String value = setColumn.substring(addr + 1).trim();
+
+        /*String[] array_setColumn = substring.split(",");
+          for (String setColumn : array_setColumn) {
+              int addr = StringUtils.indexOfIgnoreCase(setColumn, "=");
+              String column = setColumn.substring(0, addr).trim();
+              String value = setColumn.substring(addr + 1).trim();
+              this.updateEntries.add(new Entry<String, String>(column, value));
+          }*/
+
+        //采用Stack来处理
+        Stack<String> updateColumnValueStack = new Stack<String>();
+        for (int i = 0; i < substring.length(); i++) {
+            updateColumnValueStack.push(substring.substring(i, i + 1));
+        }
+
+        String column = "";
+        String value = "";
+        while (updateColumnValueStack.isEmpty() == false) {
+            column = "";
+            value = "";
+            //弹出value String
+            while (updateColumnValueStack.peek().equals("=") == false
+                    || checkRealEqual(updateColumnValueStack) == false) {
+                value = updateColumnValueStack.pop() + value;
+            }
+            //弹出=
+            updateColumnValueStack.pop();
+            //弹出column String
+            try {
+                while (updateColumnValueStack.peek().equals(",") == false) {
+                    column = updateColumnValueStack.pop() + column;
+                }
+            } catch (EmptyStackException e) {
+                //保存结果
+                this.updateEntries.add(new Entry<String, String>(column, value));
+                break;
+            }
+
+            //弹出,
+            updateColumnValueStack.pop();
+            //保存结果
             this.updateEntries.add(new Entry<String, String>(column, value));
         }
+
     }
 
     /*
@@ -1228,7 +1290,7 @@ public class ParseSQL {
         values = sql.substring(kuohao_left + 1, kuohao_right);
         // 将列名与value对应出来,保存到一个map<String,String>里面
         String[] array_columns = columns.split(",");
-        String[] array_values = values.split(",");
+        String[] array_values = dealInsertValues(values);
         if (array_columns.length != array_values.length) {
             errmsg = "insert sql columns is not map with values.";
             return;
@@ -1241,6 +1303,36 @@ public class ParseSQL {
                     array_values[j]));
         }
         this.insertEntries = entries;
+    }
+
+    private String[] dealInsertValues(String values) {
+        List<String> list_values = new LinkedList<String>();
+        int addr_douhao;
+        int last_position = 0;
+        addr_douhao = values.indexOf(",");
+        while (addr_douhao > 0) {
+            String tmp_str = values.substring(last_position, addr_douhao);
+            logger.debug("dealInsertValues function:" + tmp_str);
+            if (checkSpecialStr(tmp_str, "'")) {
+                //找到了',说明是value中的,号
+                //要继续寻找,直到找到真正的逗号为止
+                addr_douhao = values.indexOf(",", addr_douhao + 1);
+            } else {
+                //没找到单引号,说明是一个真正的逗号
+                list_values.add(tmp_str);
+                last_position = addr_douhao + 1;
+                addr_douhao = values.indexOf(",", last_position);
+            }
+        }
+        //处理最后一个value
+        list_values.add(values.substring(last_position));
+
+        //返回
+        String[] str_array = new String[list_values.size()];
+        for (int i = 0; i < str_array.length; i++) {
+            str_array[i] = list_values.get(i);
+        }
+        return str_array;
     }
 
     /*

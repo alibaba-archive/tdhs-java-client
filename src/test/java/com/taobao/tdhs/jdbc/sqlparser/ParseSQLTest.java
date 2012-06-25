@@ -90,4 +90,12 @@ public class ParseSQLTest {
         print(parseSQL);
     }
 
+    @Test
+    public void testUpdateSetColumns3() {
+        String sql = "update table1 set a='=abc',b='danc\\'hen,=efk',ok=5 where id=4";
+        ParseSQL parseSQL = new ParseSQL(sql);
+        parseSQL.sqlDispatch();
+        System.out.println(parseSQL.getUpdateEntries());
+    }
+
 }
