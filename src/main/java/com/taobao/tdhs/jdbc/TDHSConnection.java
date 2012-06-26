@@ -96,7 +96,7 @@ public class TDHSConnection implements Connection {
     public void close() throws SQLException {
         if (!isClosed()) {
             closed = true;
-            TDHSClientInstance.closeConnection(key);
+            TDHSClientInstance.getInstance().closeConnection(key);
         }
     }
 

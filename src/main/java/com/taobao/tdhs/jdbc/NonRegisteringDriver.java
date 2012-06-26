@@ -161,7 +161,7 @@ public class NonRegisteringDriver implements java.sql.Driver {
             return null;
         }
         try {
-            return new TDHSConnection(TDHSClientInstance.createConnection(props), props);
+            return new TDHSConnection(TDHSClientInstance.getInstance().createConnection(props), props);
         } catch (TDHSException e) {
             throw new SQLException(e);
         }

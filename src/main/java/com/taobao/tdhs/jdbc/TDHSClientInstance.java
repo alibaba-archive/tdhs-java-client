@@ -37,12 +37,39 @@ public final class TDHSClientInstance {
 
     private static Logger logger = LoggerFactory.getLogger(TDHSClientInstance.class);
 
-    private static final Lock lock = new ReentrantLock();
+    private static TDHSClientInstance INSTANCE = null;
 
-    private static final Map<ClientKey, ClientValue> instances = new ConcurrentHashMap<ClientKey, ClientValue>(10);
+    /**
+     * Method getInstance returns the INSTANCE of this TDHSClientInstance object.
+     *
+     * @return the INSTANCE (type TDHSClientInstance) of this TDHSClientInstance object.
+     */
+    public static synchronized TDHSClientInstance getInstance() {
+        return INSTANCE != null ? INSTANCE : (INSTANCE = new TDHSClientInstance());
+    }
 
+    private final Lock lock = new ReentrantLock();
 
-    public static @NotNull ClientKey createConnection(@NotNull Properties info) throws TDHSException {
+    private final Map<ClientKey, ClientValue> instances = new ConcurrentHashMap<ClientKey, ClientValue>(10);
+
+    /**
+     * Constructor TDHSClientInstance creates a new TDHSClientInstance INSTANCE.
+     */
+    private TDHSClientInstance() {
+    }
+
+    /**
+     * Method createConnection ...
+     *
+     * @param info of type Properties
+     *
+     * @return ClientKey
+     *
+     * @throws TDHSException when
+     */
+    public
+    @NotNull
+    ClientKey createConnection(@NotNull Properties info) throws TDHSException {
         String host = info.getProperty(NonRegisteringDriver.HOST_PROPERTY_KEY, "localhost");
         int port = ConvertUtil.safeConvertInt(info.getProperty(NonRegisteringDriver.PORT_PROPERTY_KEY, "9999"), 9999);
         int connectionNumber = ConvertUtil
@@ -81,7 +108,12 @@ public final class TDHSClientInstance {
         }
     }
 
-    public static void closeConnection(@NotNull ClientKey key) {
+    /**
+     * Method closeConnection ...
+     *
+     * @param key of type ClientKey
+     */
+    public void closeConnection(@NotNull ClientKey key) {
         logger.debug("closeConnection ClientKey:" + key);
         TDHSClient client = null;
         lock.lock();
@@ -224,7 +256,8 @@ public final class TDHSClientInstance {
             return result;
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return "ClientKey{" +
                     "address=" + address +
                     ", connectionNumber=" + connectionNumber +
