@@ -41,9 +41,12 @@ public class TDHSClientHandler extends SimpleChannelUpstreamHandler {
         this.tdhsNetForNetty = tdhsNetForNetty;
     }
 
-    @Override public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+    @Override
+    public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
         //握手需要被连接池的写锁保护起来
-        this.tdhsNetForNetty.addConnectedConnectionToPool(e.getChannel(), new ConnectionPool.Handler<Channel>() {
+        Channel channel = e.getChannel();
+        logger.warn("channelConnected! channel id:" + channel.getId());
+        this.tdhsNetForNetty.addConnectedConnectionToPool(channel, new ConnectionPool.Handler<Channel>() {
             public void execute(Channel channel) {
                 channel.write(shakeHandeMessage);
             }
@@ -51,12 +54,16 @@ public class TDHSClientHandler extends SimpleChannelUpstreamHandler {
     }
 
 
-    @Override public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-        logger.warn("channelDisconnected!");
-        tdhsNetForNetty.needCloseChannel(e.getChannel());
+    @Override
+    public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+        Channel channel = e.getChannel();
+        Integer id = channel != null ? channel.getId() : -1;
+        logger.warn("channelDisconnected! channel id:" + id);
+        tdhsNetForNetty.needCloseChannel(channel);
     }
 
-    @Override public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+    @Override
+    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 
         BasePacket packet = (BasePacket) e.getMessage();
         ArrayBlockingQueue<BasePacket> blockingQueue = responses.get(packet.getSeqId());
@@ -69,7 +76,9 @@ public class TDHSClientHandler extends SimpleChannelUpstreamHandler {
     public void exceptionCaught(
             ChannelHandlerContext ctx, ExceptionEvent e) {
         // Close the connection when an com.taobao.tdhs.client.exception is raised.
-        logger.error("exceptionCaught!", e.getCause());
-        tdhsNetForNetty.needCloseChannel(e.getChannel());
+        Channel channel = e.getChannel();
+        Integer id = channel != null ? channel.getId() : -1;
+        logger.error("exceptionCaught!  channel id:" + id, e.getCause());
+        tdhsNetForNetty.needCloseChannel(channel);
     }
 }

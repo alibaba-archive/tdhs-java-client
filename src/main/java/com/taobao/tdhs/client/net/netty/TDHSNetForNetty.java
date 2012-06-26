@@ -39,7 +39,7 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
 
     protected ClientBootstrap bootstrap;
 
-    private boolean isReleasing = false;
+    private transient boolean isReleasing = false;
 
 
     public void write(BasePacket packet) throws TDHSException {
@@ -61,7 +61,8 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
                 new TDHSPiplelineFactoty(shakeHandPacket, responses, this));
     }
 
-    @Override protected Channel _connect(InetSocketAddress address) {
+    @Override
+    protected Channel _connect(InetSocketAddress address) {
         ChannelFuture future = bootstrap.connect(address);
         Channel channel = future.awaitUninterruptibly().getChannel();
         if (!future.isSuccess()) {
@@ -73,6 +74,7 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
     }
 
     protected void _release() {
+        logger.warn("client is Releasing now!");
         isReleasing = true;
         connectionPool.close(new ConnectionPool.Handler<Channel>() {
             public void execute(Channel channel) {
