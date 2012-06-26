@@ -27,6 +27,8 @@ import com.taobao.tdhs.jdbc.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,6 +41,9 @@ import java.util.Map;
  * @since 12-3-8 上午9:12
  */
 public class TDHSStatement implements Statement {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final Connection connection;
 
     private final TDHSClient client;
@@ -483,11 +488,12 @@ public class TDHSStatement implements Statement {
     }
 
     public int getQueryTimeout() throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        return Integer.parseInt(connection.getClientInfo(NonRegisteringDriver.TIME_OUT_PROPERTY_KEY));
     }
 
     public void setQueryTimeout(int seconds) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        logger.warn("setQueryTimeout will be ignore!");
+//        throw new SQLFeatureNotSupportedException();
     }
 
     public void cancel() throws SQLException {
