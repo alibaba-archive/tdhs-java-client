@@ -105,7 +105,7 @@ public class TDHSConnection implements Connection {
     }
 
     public DatabaseMetaData getMetaData() throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        return new TDHSDatabaseMetaData(this);
     }
 
     public void setReadOnly(boolean readOnly) throws SQLException {
