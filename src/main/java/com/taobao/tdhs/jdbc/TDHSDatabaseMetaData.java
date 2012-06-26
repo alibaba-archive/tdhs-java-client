@@ -2045,6 +2045,34 @@ public class TDHSDatabaseMetaData implements DatabaseMetaData {
     }
 
     /**
+     * Method getPseudoColumns ...
+     *
+     * @param catalog           of type String
+     * @param schemaPattern     of type String
+     * @param tableNamePattern  of type String
+     * @param columnNamePattern of type String
+     *
+     * @return ResultSet
+     *
+     * @throws SQLException when
+     */
+    public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern,
+                                      String columnNamePattern) throws SQLException {
+        return null;  //FIXME 编写实现
+    }
+
+    /**
+     * Method generatedKeyAlwaysReturned ...
+     *
+     * @return boolean
+     *
+     * @throws SQLException when
+     */
+    public boolean generatedKeyAlwaysReturned() throws SQLException {
+        return false;  //FIXME 编写实现
+    }
+
+    /**
      * Method unwrap ...
      *
      * @param iface of type Class<T>
