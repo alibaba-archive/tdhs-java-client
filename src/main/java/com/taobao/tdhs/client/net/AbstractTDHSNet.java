@@ -45,6 +45,9 @@ public abstract class AbstractTDHSNet<T> implements TDHSNet {
     private boolean shutdown = false;
 
     private Thread reconnectThread = new Thread(new Runnable() {
+        /**
+         * Method run ...
+         */
         public void run() {
             while (!shutdown) {
                 int num = needConnectionNumber.get();
@@ -60,7 +63,7 @@ public abstract class AbstractTDHSNet<T> implements TDHSNet {
                 }
             }
         }
-    }
+    }, "TDHS reconnect Thread"
     );
 
 
