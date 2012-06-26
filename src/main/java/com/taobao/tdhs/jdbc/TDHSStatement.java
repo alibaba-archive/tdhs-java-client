@@ -701,7 +701,7 @@ public class TDHSStatement implements Statement {
     }
 
     public boolean isClosed() throws SQLException {
-        return this.close;
+        return this.close || getConnection().isClosed();
     }
 
     public void setPoolable(boolean poolable) throws SQLException {
