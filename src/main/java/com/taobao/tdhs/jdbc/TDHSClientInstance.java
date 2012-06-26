@@ -39,7 +39,7 @@ public final class TDHSClientInstance {
 
     private static final Lock lock = new ReentrantLock();
 
-    private static final Map<ClientKey, ClientVaue> instances = new ConcurrentHashMap<ClientKey, ClientVaue>(10);
+    private static final Map<ClientKey, ClientValue> instances = new ConcurrentHashMap<ClientKey, ClientValue>(10);
 
 
     public static @NotNull ClientKey createConnection(@NotNull Properties info) throws TDHSException {
@@ -62,7 +62,7 @@ public final class TDHSClientInstance {
         logger.debug("createConnection ClientKey:" + key);
         lock.lock();
         try {
-            ClientVaue value = instances.get(key);
+            ClientValue value = instances.get(key);
             if (value != null) {
                 value.addRefCount();
                 key.setClient(value.getClient());
@@ -71,7 +71,7 @@ public final class TDHSClientInstance {
                 TDHSClient tdhsClient =
                         new TDHSClientImpl(key.getAddress(), connectionNumber, timeOut, needReconnect, connectTimeOut,
                                 charestName, readCode, writeCode);
-                value = new ClientVaue(tdhsClient);
+                value = new ClientValue(tdhsClient);
                 instances.put(key, value);
                 key.setClient(tdhsClient);
                 return key;
@@ -86,7 +86,7 @@ public final class TDHSClientInstance {
         TDHSClient client = null;
         lock.lock();
         try {
-            ClientVaue value = instances.get(key);
+            ClientValue value = instances.get(key);
             if (value == null) {
                 throw new RuntimeException("Don't have this client in instances,Maybe close twice! key is " + key);
             }
@@ -104,12 +104,12 @@ public final class TDHSClientInstance {
     }
 
 
-    private static class ClientVaue {
+    private static class ClientValue {
         private TDHSClient client;
 
         private AtomicLong refCount = new AtomicLong(1);
 
-        private ClientVaue(TDHSClient client) {
+        private ClientValue(TDHSClient client) {
             this.client = client;
         }
 
