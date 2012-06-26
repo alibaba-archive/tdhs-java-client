@@ -39,13 +39,13 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
 
     protected ClientBootstrap bootstrap;
 
-    private boolean isReleaseing = false;
+    private boolean isReleasing = false;
 
 
     public void write(BasePacket packet) throws TDHSException {
         Channel channel = connectionPool.get();
         if (channel == null) {
-            throw new TDHSException("no available connection! maybe server has someting error!");
+            throw new TDHSException("no available connection! maybe server has something error!");
         }
         channel.write(packet);
     }
@@ -65,7 +65,7 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
         ChannelFuture future = bootstrap.connect(address);
         Channel channel = future.awaitUninterruptibly().getChannel();
         if (!future.isSuccess()) {
-            logger.error("connect failed!");
+            logger.error("connect failed!", future.getCause());
             return null;
         } else {
             return channel;
@@ -73,7 +73,7 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
     }
 
     protected void _release() {
-        isReleaseing = true;
+        isReleasing = true;
         connectionPool.close(new ConnectionPool.Handler<Channel>() {
             public void execute(Channel channel) {
                 channel.close();
@@ -83,8 +83,8 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
     }
 
     public void needCloseChannel(Channel channel) {
-        if (isReleaseing) {
-            //Releaseing will close channel by self
+        if (isReleasing) {
+            //Releasing will close channel by self
             return;
         }
         boolean ret = connectionPool.remove(channel);
