@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -226,7 +227,7 @@ public final class ConvertUtil {
             return calendar.getTimeInMillis();
         }
 
-        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (cal != null) {
             TimeZone timeZone = cal.getTimeZone();
             dateFormat.setTimeZone(timeZone);
