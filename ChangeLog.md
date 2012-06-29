@@ -1,6 +1,6 @@
 0.3.2.2(2012-06-29)
 ---------------------------
-* Fix wrong word
+* Fix wrong word  (Some API change name! -..-!)
 * Support Blob and Clob
 * Fix some sql parse bug!
 * Add SimplePooledTDHSDataSource
