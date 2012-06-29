@@ -149,5 +149,65 @@ public class CRUDTest extends TestBase {
         executeSelect(getTDHSConnection());
     }
 
+    @Test
+    public void testTDHSGetBlob() throws ClassNotFoundException, SQLException {
+        Connection connection = getTDHSConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = null;
+        try {
+            boolean r = statement.execute("select a,b,c,n,t as time from test where id>0");
+            assertTrue(r);
+            resultSet = statement.getResultSet();
+            int size = 0;
+            while (resultSet.next()) {
+                Blob blob = resultSet.getBlob(1);
+                String expected = (String) DATA[size][0];
+                assertEquals(expected.getBytes().length, blob.length());
+                for (int i = 0; i < expected.getBytes().length; i++) {
+                    assertEquals(expected.getBytes()[i], blob.getBytes(0, (int) blob.length())[i]);
+                }
+                size++;
+            }
+            assertEquals(DATA.length, size);
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            connection.close();
+        }
+    }
+
+    @Test
+    public void testTDHSGetClob() throws ClassNotFoundException, SQLException {
+        Connection connection = getTDHSConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = null;
+        try {
+            boolean r = statement.execute("select a,b,c,n,t as time from test where id>0");
+            assertTrue(r);
+            resultSet = statement.getResultSet();
+            int size = 0;
+            while (resultSet.next()) {
+                Clob clob = resultSet.getClob(1);
+                String expected = (String) DATA[size][0];
+                assertEquals(expected.getBytes().length, clob.length());
+                assertEquals(expected, clob.getSubString(0, (int) clob.length()));
+                size++;
+            }
+            assertEquals(DATA.length, size);
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            connection.close();
+        }
+    }
+
 
 }

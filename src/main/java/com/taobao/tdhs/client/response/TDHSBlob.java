@@ -1,9 +1,11 @@
 package com.taobao.tdhs.client.response;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * @author <a href="mailto:wentong@taobao.com">文通</a>
@@ -11,7 +13,16 @@ import java.sql.SQLException;
  */
 public class TDHSBlob implements Blob {
 
-    private byte[] data;
+    private final byte[] data;
+
+    /**
+     * Constructor TDHSBlob creates a new TDHSBlob instance.
+     *
+     * @param data of type byte[]
+     */
+    public TDHSBlob(byte[] data) {
+        this.data = data;
+    }
 
     /**
      * Method length ...
@@ -35,7 +46,15 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public byte[] getBytes(long pos, int length) throws SQLException {
-        return new byte[0];  //FIXME 编写实现
+        if (data == null || data.length < pos + length) {
+            throw new SQLException(
+                    "getBytes out of range! " +
+                            "the byte length[" + length() + "]," +
+                            "request is pos [" + pos + "] length [" + length + "]");
+        }
+        byte[] r = new byte[length];
+        System.arraycopy(data, (int) pos, r, 0, length);
+        return r;
     }
 
     /**
@@ -46,7 +65,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public InputStream getBinaryStream() throws SQLException {
-        return null;  //FIXME 编写实现
+        return data == null ? null : new ByteArrayInputStream(data);
     }
 
     /**
@@ -60,7 +79,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public long position(byte[] pattern, long start) throws SQLException {
-        return 0;  //FIXME 编写实现
+        throw new SQLFeatureNotSupportedException();
     }
 
     /**
@@ -74,7 +93,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public long position(Blob pattern, long start) throws SQLException {
-        return 0;  //FIXME 编写实现
+        throw new SQLFeatureNotSupportedException();
     }
 
     /**
@@ -88,7 +107,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public int setBytes(long pos, byte[] bytes) throws SQLException {
-        return 0;  //FIXME 编写实现
+        throw new SQLFeatureNotSupportedException();
     }
 
     /**
@@ -104,7 +123,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public int setBytes(long pos, byte[] bytes, int offset, int len) throws SQLException {
-        return 0;  //FIXME 编写实现
+        throw new SQLFeatureNotSupportedException();
     }
 
     /**
@@ -117,7 +136,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public OutputStream setBinaryStream(long pos) throws SQLException {
-        return null;  //FIXME 编写实现
+        throw new SQLFeatureNotSupportedException();
     }
 
     /**
@@ -128,7 +147,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public void truncate(long len) throws SQLException {
-        //FIXME 编写实现
+        throw new SQLFeatureNotSupportedException();
     }
 
     /**
@@ -137,7 +156,6 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public void free() throws SQLException {
-        //FIXME 编写实现
     }
 
     /**
@@ -151,6 +169,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public InputStream getBinaryStream(long pos, long length) throws SQLException {
-        return null;  //FIXME 编写实现
+        byte[] bytes = getBytes(pos, (int) length);
+        return bytes == null ? null : new ByteArrayInputStream(bytes);
     }
 }

@@ -12,7 +12,6 @@
 package com.taobao.tdhs.client.response;
 
 import com.taobao.tdhs.client.util.ConvertUtil;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -164,7 +163,7 @@ public class TDHSResultSet implements ResultSet {
             throw new SQLException(e);
         }
         this.lastWasNull = (str == null);
-        return StringUtils.trim(str);
+        return str;
     }
 
     /**
@@ -268,6 +267,7 @@ public class TDHSResultSet implements ResultSet {
      * @return BigDecimal
      *
      * @throws SQLException when
+     * @see java.sql.ResultSet#getBigDecimal(int, int)
      */
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         return ConvertUtil.getBigDecimalFromString(this.getString(columnIndex), scale);
@@ -351,6 +351,7 @@ public class TDHSResultSet implements ResultSet {
      * @return InputStream
      *
      * @throws SQLException when
+     * @see java.sql.ResultSet#getUnicodeStream(int)
      */
     public InputStream getUnicodeStream(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException();
@@ -482,6 +483,7 @@ public class TDHSResultSet implements ResultSet {
      * @return BigDecimal
      *
      * @throws SQLException when
+     * @see java.sql.ResultSet#getBigDecimal(String, int)
      */
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
         return this.getBigDecimal(this.findColumn(columnLabel), scale);
@@ -560,6 +562,7 @@ public class TDHSResultSet implements ResultSet {
      * @return InputStream
      *
      * @throws SQLException when
+     * @see java.sql.ResultSet#getUnicodeStream(String)
      */
     public InputStream getUnicodeStream(String columnLabel) throws SQLException {
         return this.getUnicodeStream(this.findColumn(columnLabel));
@@ -897,9 +900,9 @@ public class TDHSResultSet implements ResultSet {
      */
     public boolean absolute(int row) throws SQLException {
         if (fieldData == null || row <= 0 || row > fieldData.size()) {
-            throw new SQLException("Invaild row:" + row);
+            throw new SQLException("Invalid row:" + row);
         }
-        if (fieldData != null && !fieldData.isEmpty()) {
+        if (!fieldData.isEmpty()) {
             index = row - 1;
             currentRow = fieldData.get(index);
             iterator = fieldData.listIterator(index);
@@ -1610,7 +1613,7 @@ public class TDHSResultSet implements ResultSet {
      * @throws SQLException when
      */
     public Blob getBlob(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        return new TDHSBlob(getBytes(columnIndex));
     }
 
     /**
@@ -1623,7 +1626,7 @@ public class TDHSResultSet implements ResultSet {
      * @throws SQLException when
      */
     public Clob getClob(int columnIndex) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        return new TDHSClob(getString(columnIndex));
     }
 
     /**
