@@ -164,7 +164,7 @@ public class CRUDTest extends TestBase {
                 String expected = (String) DATA[size][0];
                 assertEquals(expected.getBytes().length, blob.length());
                 for (int i = 0; i < expected.getBytes().length; i++) {
-                    assertEquals(expected.getBytes()[i], blob.getBytes(0, (int) blob.length())[i]);
+                    assertEquals(expected.getBytes()[i], blob.getBytes(1, (int) blob.length())[i]);
                 }
                 size++;
             }
@@ -194,7 +194,7 @@ public class CRUDTest extends TestBase {
                 Clob clob = resultSet.getClob(1);
                 String expected = (String) DATA[size][0];
                 assertEquals(expected.getBytes().length, clob.length());
-                assertEquals(expected, clob.getSubString(0, (int) clob.length()));
+                assertEquals(expected, clob.getSubString(1, (int) clob.length()));
                 size++;
             }
             assertEquals(DATA.length, size);

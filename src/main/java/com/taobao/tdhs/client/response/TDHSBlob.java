@@ -46,6 +46,7 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public byte[] getBytes(long pos, int length) throws SQLException {
+        pos--;
         if (data == null || data.length < pos + length) {
             throw new SQLException(
                     "getBytes out of range! " +
@@ -79,6 +80,9 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public long position(byte[] pattern, long start) throws SQLException {
+        if (start < 1 || start > length()) {
+            throw new SQLException("start [" + start + "] is out of range!");
+        }
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -93,6 +97,9 @@ public class TDHSBlob implements Blob {
      * @throws SQLException when
      */
     public long position(Blob pattern, long start) throws SQLException {
+        if (start < 1 || start > length()) {
+            throw new SQLException("start [" + start + "] is out of range!");
+        }
         throw new SQLFeatureNotSupportedException();
     }
 

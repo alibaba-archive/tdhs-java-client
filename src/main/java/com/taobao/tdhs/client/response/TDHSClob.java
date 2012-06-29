@@ -1,5 +1,7 @@
 package com.taobao.tdhs.client.response;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.*;
 import java.sql.Clob;
 import java.sql.SQLException;
@@ -45,6 +47,7 @@ public class TDHSClob implements Clob {
      * @throws SQLException when
      */
     public String getSubString(long pos, int length) throws SQLException {
+        pos--;
         try {
             return value.substring((int) pos, (int) pos + length);
         } catch (Exception e) {
@@ -91,7 +94,11 @@ public class TDHSClob implements Clob {
      * @throws SQLException when
      */
     public long position(String searchstr, long start) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        if (start < 1 || start > length()) {
+            throw new SQLException("start [" + start + "] is out of range!");
+        }
+        int i = StringUtils.indexOf(value.substring((int) (start - 1)), searchstr);
+        return i >= 0 ? i + 1 : i;
     }
 
     /**
@@ -105,7 +112,12 @@ public class TDHSClob implements Clob {
      * @throws SQLException when
      */
     public long position(Clob searchstr, long start) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        if (start < 1 || start > length()) {
+            throw new SQLException("start [" + start + "] is out of range!");
+        }
+        int i = StringUtils.indexOf(value.substring((int) (start - 1)), searchstr.getSubString(1,
+                (int) searchstr.length()));
+        return i >= 0 ? i + 1 : i;
     }
 
     /**
