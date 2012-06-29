@@ -57,7 +57,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         try {
             o.isVaild();
             ByteArrayOutputStream out = new ByteArrayOutputStream(2 * 1024);
-            encodeRequest(o, out, o.getCharestName());
+            encodeRequest(o, out, o.getCharsetName());
             return out.toByteArray();
         } catch (IllegalAccessException e) {
             throw new TDHSEncodeException(e);
@@ -66,7 +66,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         }
     }
 
-    private static void encodeRequest(Request o, ByteArrayOutputStream out, String charestName)
+    private static void encodeRequest(Request o, ByteArrayOutputStream out, String charsetName)
             throws IllegalAccessException, IOException, TDHSEncodeException {
         for (Field f : o.getClass().getDeclaredFields()) {
             if (!Modifier.isPublic(f.getModifiers())) {
@@ -74,18 +74,18 @@ public class TDHSProtocolBinary implements TDHSProtocol {
             }
             Object v = f.get(o);
             if (v instanceof Request) {
-                encodeRequest((Request) v, out, charestName);
+                encodeRequest((Request) v, out, charsetName);
             } else if (f.getName().startsWith("_")) {
-                writeObjectToStream(v, out, f.getName(), charestName);
+                writeObjectToStream(v, out, f.getName(), charsetName);
             }
         }
     }
 
-    private static void writeObjectToStream(Object o, ByteArrayOutputStream out, String fieldName, String charestName)
+    private static void writeObjectToStream(Object o, ByteArrayOutputStream out, String fieldName, String charsetName)
             throws IOException,
             TDHSEncodeException, IllegalAccessException {
         if (o == null || o instanceof String) {
-            writeToStream((String) o, out, charestName);
+            writeToStream((String) o, out, charsetName);
         } else if (o instanceof Integer) {
             if (fieldName.startsWith("____")) {
                 writeInt8ToStream((Integer) o, out);
@@ -93,21 +93,21 @@ public class TDHSProtocolBinary implements TDHSProtocol {
                 writeInt32ToStream((Integer) o, out);
             }
         } else if (o instanceof Collection) {
-            writeToStream(((Collection) o).toArray(), out, charestName);
+            writeToStream(((Collection) o).toArray(), out, charsetName);
         } else if (o instanceof Object[]) {
-            writeToStream((Object[]) o, out, charestName);
+            writeToStream((Object[]) o, out, charsetName);
         } else {
             throw new TDHSEncodeException("unkown type!");
         }
     }
 
 
-    private static void writeToStream(String v, ByteArrayOutputStream out, @Nullable String charestName)
+    private static void writeToStream(String v, ByteArrayOutputStream out, @Nullable String charsetName)
             throws IOException {
         if (v == null) {
             writeInt32ToStream(0, out);
         } else {
-            byte[] sb = StringUtils.isNotBlank(charestName) ? v.getBytes(charestName) :
+            byte[] sb = StringUtils.isNotBlank(charsetName) ? v.getBytes(charsetName) :
                     v.getBytes();
             writeInt32ToStream(sb.length + 1, out);
             out.write(sb);
@@ -116,20 +116,20 @@ public class TDHSProtocolBinary implements TDHSProtocol {
     }
 
 
-    private static void writeToStream(Object[] array, ByteArrayOutputStream out, String charestName) throws IOException,
+    private static void writeToStream(Object[] array, ByteArrayOutputStream out, String charsetName) throws IOException,
             TDHSEncodeException, IllegalAccessException {
         writeInt32ToStream(array.length, out);
         for (Object o : array) {
             if (o == null || o instanceof String) {
-                writeToStream((String) o, out, charestName);
+                writeToStream((String) o, out, charsetName);
             } else if (o instanceof Integer) {
                 writeInt32ToStream((Integer) o, out);
             } else if (o instanceof Request) {
-                encodeRequest((Request) o, out, charestName);
+                encodeRequest((Request) o, out, charsetName);
             } else if (o instanceof Collection) {
-                writeToStream(((Collection) o).toArray(), out, charestName);
+                writeToStream(((Collection) o).toArray(), out, charsetName);
             } else if (o instanceof Object[]) {
-                writeToStream((Object[]) o, out, charestName);
+                writeToStream((Object[]) o, out, charsetName);
             } else {
                 throw new TDHSEncodeException("unkown type!");
             }

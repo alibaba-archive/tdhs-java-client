@@ -101,23 +101,23 @@ public class QueryImpl implements Query {
         return statement.update(update);
     }
 
-    public TDHSResponse get(String charestName) throws TDHSException {
-        get.setCharestName(charestName);
+    public TDHSResponse get(String charsetName) throws TDHSException {
+        get.setCharsetName(charsetName);
         return statement.get(get);
     }
 
-    public TDHSResponse count(String charestName) throws TDHSException {
-        get.setCharestName(charestName);
+    public TDHSResponse count(String charsetName) throws TDHSException {
+        get.setCharsetName(charsetName);
         return statement.count(get);
     }
 
-    public TDHSResponse delete(String charestName) throws TDHSException {
-        get.setCharestName(charestName);
+    public TDHSResponse delete(String charsetName) throws TDHSException {
+        get.setCharsetName(charsetName);
         return statement.delete(get);
     }
 
-    public TDHSResponse update(String charestName) throws TDHSException {
-        update.setCharestName(charestName);
+    public TDHSResponse update(String charsetName) throws TDHSException {
+        update.setCharsetName(charsetName);
         return statement.update(update);
     }
 }

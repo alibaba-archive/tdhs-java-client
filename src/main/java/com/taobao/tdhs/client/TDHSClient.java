@@ -28,26 +28,26 @@ public interface TDHSClient extends Statement {
     public static final String TIME_OUT = "timeOut";
     public static final String NEED_RECONNECT = "needReconnect";
     public static final String CONNECT_TIMEOUT = "connectTimeout";
-    public static final String CHAREST_NAME = "charestName";
+    public static final String CHAREST_NAME = "charsetName";
     public static final String READ_CODE = "readCode";
     public static final String WRITE_CODE = "writeCode";
 
 
     /**
-     * Method getCharestName returns the charestName of this TDHSClient object.
+     * Method getCharsetName returns the charsetName of this TDHSClient object.
      * like <code>UTF8</code> for the string encoding when read and send
      *
-     * @return the charestName (type String) of this TDHSClient object.
+     * @return the charsetName (type String) of this TDHSClient object.
      */
-    String getCharestName();
+    String getCharsetName();
 
     /**
-     * Method setCharestName sets the charestName of this TDHSClient object.
+     * Method setCharsetName sets the charsetName of this TDHSClient object.
      * like <code>UTF8</code> for the string encoding when read and send
      *
-     * @param charestName the charestName of this TDHSClient object.
+     * @param charsetName the charsetName of this TDHSClient object.
      */
-    void setCharestName(String charestName);
+    void setCharsetName(String charsetName);
 
 
     /**

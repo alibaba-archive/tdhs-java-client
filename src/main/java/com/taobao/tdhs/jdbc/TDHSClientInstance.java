@@ -80,12 +80,12 @@ public final class TDHSClientInstance {
                 Boolean.valueOf(info.getProperty(NonRegisteringDriver.NEED_RECONNECT_PROPERTY_KEY, "true"));
         int connectTimeOut = ConvertUtil
                 .safeConvertInt(info.getProperty(NonRegisteringDriver.CONNECT_TIMEOUT_PROPERTY_KEY, "1000"), 1000);
-        String charestName = info.getProperty(NonRegisteringDriver.CHAREST_NAME_PROPERTY_KEY);
+        String charsetName = info.getProperty(NonRegisteringDriver.CHAREST_NAME_PROPERTY_KEY);
         String readCode = info.getProperty(NonRegisteringDriver.READ_CODE_PROPERTY_KEY);
 
         String writeCode = info.getProperty(NonRegisteringDriver.WRITE_CODE_PROPERTY_KEY);
         ClientKey key = new ClientKey(new InetSocketAddress(host, port), connectionNumber, timeOut, needReconnect,
-                connectTimeOut, charestName, readCode, writeCode);
+                connectTimeOut, charsetName, readCode, writeCode);
         logger.debug("createConnection ClientKey:" + key);
         lock.lock();
         try {
@@ -97,7 +97,7 @@ public final class TDHSClientInstance {
             } else {
                 TDHSClient tdhsClient =
                         new TDHSClientImpl(key.getAddress(), connectionNumber, timeOut, needReconnect, connectTimeOut,
-                                charestName, readCode, writeCode);
+                                charsetName, readCode, writeCode);
                 value = new ClientValue(tdhsClient);
                 instances.put(key, value);
                 key.setClient(tdhsClient);
@@ -165,20 +165,20 @@ public final class TDHSClientInstance {
         private int timeOut;
         private boolean needReconnect;
         private int connectTimeOut;
-        private String charestName;
+        private String charsetName;
         private String readCode;
         private String writeCode;
 
         private TDHSClient client;
 
         private ClientKey(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
-                          int connectTimeOut, String charestName, String readCode, String writeCode) {
+                          int connectTimeOut, String charsetName, String readCode, String writeCode) {
             this.address = address;
             this.connectionNumber = connectionNumber;
             this.timeOut = timeOut;
             this.needReconnect = needReconnect;
             this.connectTimeOut = connectTimeOut;
-            this.charestName = charestName;
+            this.charsetName = charsetName;
             this.readCode = readCode;
             this.writeCode = writeCode;
         }
@@ -211,8 +211,8 @@ public final class TDHSClientInstance {
             return connectTimeOut;
         }
 
-        public String getCharestName() {
-            return charestName;
+        public String getCharsetName() {
+            return charsetName;
         }
 
         public String getReadCode() {
@@ -235,7 +235,7 @@ public final class TDHSClientInstance {
             if (needReconnect != clientKey.needReconnect) return false;
             if (timeOut != clientKey.timeOut) return false;
             if (address != null ? !address.equals(clientKey.address) : clientKey.address != null) return false;
-            if (charestName != null ? !charestName.equals(clientKey.charestName) : clientKey.charestName != null)
+            if (charsetName != null ? !charsetName.equals(clientKey.charsetName) : clientKey.charsetName != null)
                 return false;
             if (readCode != null ? !readCode.equals(clientKey.readCode) : clientKey.readCode != null) return false;
             if (writeCode != null ? !writeCode.equals(clientKey.writeCode) : clientKey.writeCode != null) return false;
@@ -250,7 +250,7 @@ public final class TDHSClientInstance {
             result = 31 * result + timeOut;
             result = 31 * result + (needReconnect ? 1 : 0);
             result = 31 * result + connectTimeOut;
-            result = 31 * result + (charestName != null ? charestName.hashCode() : 0);
+            result = 31 * result + (charsetName != null ? charsetName.hashCode() : 0);
             result = 31 * result + (readCode != null ? readCode.hashCode() : 0);
             result = 31 * result + (writeCode != null ? writeCode.hashCode() : 0);
             return result;
@@ -264,7 +264,7 @@ public final class TDHSClientInstance {
                     ", timeOut=" + timeOut +
                     ", needReconnect=" + needReconnect +
                     ", connectTimeOut=" + connectTimeOut +
-                    ", charestName='" + charestName + '\'' +
+                    ", charsetName='" + charsetName + '\'' +
                     ", readCode='" + readCode + '\'' +
                     ", writeCode='" + writeCode + '\'' +
                     '}';

@@ -31,7 +31,7 @@ public class CharsetTest extends TestBase{
 	@Test
 	public void testDifferentCharset() throws TDHSException {
 		try {
-			client.setCharestName("gbk");
+			client.setCharsetName("gbk");
 
 			TDHSResponse r = client.insert(db, table, fields, new String[] {
 					"999", "中文", "999" });
@@ -44,7 +44,7 @@ public class CharsetTest extends TestBase{
 			Assert.assertEquals(ClientStatus.OK, r.getStatus());
 			Assert.assertEquals("", r.getFieldData().get(0).get(1));
 
-			client.setCharestName("utf8");
+			client.setCharsetName("utf8");
 
 		} finally {
 			TDHSResponse r = client.delete(db, table, null,

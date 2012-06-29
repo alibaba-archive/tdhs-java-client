@@ -53,7 +53,7 @@ public class TDHSClientImpl implements TDHSClient {
 
     private final int timeOut; //ms
 
-    private String charestName;
+    private String charsetName;
 
 
     /**
@@ -123,14 +123,14 @@ public class TDHSClientImpl implements TDHSClient {
      * @param timeOut          of type int
      * @param needReconnect    of type boolean
      * @param connectTimeOut   of type int
-     * @param charestName      of type String
+     * @param charsetName      of type String
      * @param readCode         of type String
      * @param writeCode        of type String
      *
      * @throws TDHSException when
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
-                          int connectTimeOut, @Nullable String charestName, @Nullable String readCode,
+                          int connectTimeOut, @Nullable String charsetName, @Nullable String readCode,
                           @Nullable String writeCode)
             throws TDHSException {
 
@@ -140,7 +140,7 @@ public class TDHSClientImpl implements TDHSClient {
         this.timeOut = timeOut;
         protocol = TDHSCommon.PROTOCOL_FOR_BINARY;
         tdhsNet = new TDHSNetForNetty();
-        this.charestName = charestName;
+        this.charsetName = charsetName;
         NetParameters parameters = new NetParameters();
         parameters.setAddress(address);
         parameters.setConnectionNumber(connectionNumber);
@@ -160,21 +160,21 @@ public class TDHSClientImpl implements TDHSClient {
     }
 
     /**
-     * Method getCharestName returns the charestName of this TDHSClientImpl object.
+     * Method getCharsetName returns the charsetName of this TDHSClientImpl object.
      *
-     * @return the charestName (type String) of this TDHSClientImpl object.
+     * @return the charsetName (type String) of this TDHSClientImpl object.
      */
-    public String getCharestName() {
-        return charestName;
+    public String getCharsetName() {
+        return charsetName;
     }
 
     /**
-     * Method setCharestName sets the charestName of this TDHSClientImpl object.
+     * Method setCharsetName sets the charsetName of this TDHSClientImpl object.
      *
-     * @param charestName the charestName of this TDHSClientImpl object.
+     * @param charsetName the charsetName of this TDHSClientImpl object.
      */
-    public void setCharestName(String charestName) {
-        this.charestName = charestName;
+    public void setCharsetName(String charsetName) {
+        this.charsetName = charsetName;
     }
 
     /**
@@ -183,7 +183,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Statement
      */
     public Statement createStatement() {
-        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charestName);
+        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName);
     }
 
     /**
@@ -194,7 +194,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Statement
      */
     public Statement createStatement(int hash) {
-        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charestName, hash);
+        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, hash);
     }
 
     /**
@@ -203,7 +203,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return BatchStatement
      */
     public BatchStatement createBatchStatement() {
-        return new BatchStatementImpl(tdhsNet, id, responses, protocol, timeOut, charestName);
+        return new BatchStatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName);
     }
 
     /**

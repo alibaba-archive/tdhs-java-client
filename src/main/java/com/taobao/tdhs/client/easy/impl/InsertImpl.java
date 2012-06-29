@@ -87,7 +87,7 @@ public class InsertImpl implements Insert {
     }
 
     public TDHSResponse insert(String charsetName) throws TDHSException {
-        insert.setCharestName(charsetName);
+        insert.setCharsetName(charsetName);
         return statement.insert(insert);
     }
 

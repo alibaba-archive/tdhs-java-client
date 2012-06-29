@@ -14,6 +14,7 @@ package com.taobao.tdhs.client.util;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -236,6 +237,28 @@ public final class ConvertUtil {
             return dateFormat.parse(val).getTime();
         } catch (ParseException e) {
             throw new SQLException("Parse date failure:" + val);
+        }
+    }
+
+
+    /**
+     * Method getStringFromByte ...
+     *
+     * @param f           of type byte[]
+     * @param charsetName of type String
+     *
+     * @return String
+     *
+     * @throws UnsupportedEncodingException when
+     */
+    public static String getStringFromByte(byte[] f, String charsetName) throws UnsupportedEncodingException {
+        if (f.length == 0) {
+            return null;
+        } else if (f.length == 1 && f[0] == 0) {
+            return "";
+        } else {
+            return StringUtils.isNotBlank(charsetName) ? new String(f, charsetName) :
+                    new String(f);
         }
     }
 

@@ -115,46 +115,46 @@ public interface Query {
     TDHSResponse update() throws TDHSException;
 
     /**
-     * execute get operation with charestName
+     * execute get operation with charsetName
      *
-     * @param charestName of type String
+     * @param charsetName of type String
      *
      * @return TDHSResponse
      *
      * @throws TDHSException when
      */
-    TDHSResponse get(String charestName) throws TDHSException;
+    TDHSResponse get(String charsetName) throws TDHSException;
 
     /**
-     * execute count operation  with charestName
+     * execute count operation  with charsetName
      *
-     * @param charestName of type String
+     * @param charsetName of type String
      *
      * @return TDHSResponse
      *
      * @throws TDHSException when
      */
-    TDHSResponse count(String charestName) throws TDHSException;
+    TDHSResponse count(String charsetName) throws TDHSException;
 
     /**
-     * execute delete operation  with charestName
+     * execute delete operation  with charsetName
      *
-     * @param charestName of type String
+     * @param charsetName of type String
      *
      * @return TDHSResponse
      *
      * @throws TDHSException when
      */
-    TDHSResponse delete(String charestName) throws TDHSException;
+    TDHSResponse delete(String charsetName) throws TDHSException;
 
     /**
-     * execute update operation  with charestName
+     * execute update operation  with charsetName
      *
-     * @param charestName of type String
+     * @param charsetName of type String
      *
      * @return TDHSResponse
      *
      * @throws TDHSException when
      */
-    TDHSResponse update(String charestName) throws TDHSException;
+    TDHSResponse update(String charsetName) throws TDHSException;
 }

@@ -17,23 +17,23 @@ package com.taobao.tdhs.client.request;
  */
 public abstract class RequestWithCharest implements Request {
 
-    private String charestName;
+    private String charsetName;
 
     /**
-     * Method getCharestName returns the charestName of this RequestWithCharest object.
+     * Method getCharsetName returns the charsetName of this RequestWithCharest object.
      *
-     * @return the charestName (type String) of this RequestWithCharest object.
+     * @return the charsetName (type String) of this RequestWithCharest object.
      */
-    public String getCharestName() {
-        return charestName;
+    public String getCharsetName() {
+        return charsetName;
     }
 
     /**
-     * Method setCharestName sets the charestName of this RequestWithCharest object.
+     * Method setCharsetName sets the charsetName of this RequestWithCharest object.
      *
-     * @param charestName the charestName of this RequestWithCharest object.
+     * @param charsetName the charsetName of this RequestWithCharest object.
      */
-    public void setCharestName(String charestName) {
-        this.charestName = charestName;
+    public void setCharsetName(String charsetName) {
+        this.charsetName = charsetName;
     }
 }

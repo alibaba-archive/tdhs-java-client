@@ -48,8 +48,8 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
 
     public BatchStatementImpl(TDHSNet tdhsNet, AtomicLong id,
                               ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses, TDHSProtocol protocol,
-                              int timeOut, String charestName) {
-        super(tdhsNet, id, responses, protocol, timeOut, charestName);
+                              int timeOut, String charsetName) {
+        super(tdhsNet, id, responses, protocol, timeOut, charsetName);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
                 if (ret.getClientStatus() != null && ret.getClientStatus().getStatus() >= 400 &&
                         ret.getClientStatus().getStatus() < 600) {
                     throw new TDHSBatchException(
-                            new TDHSResponse(ret.getClientStatus(), null, ret.getData(), charestName));
+                            new TDHSResponse(ret.getClientStatus(), null, ret.getData(), charsetName));
                 } else {
                     throw new TDHSException("unknown response code! [" + (ret.getClientStatus() != null ?
                             String.valueOf(ret.getClientStatus().getStatus()) : "") + "]");
@@ -130,7 +130,7 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
             int i = 0;
             for (internal_struct is : batchRequest) {
                 result[i++] =
-                        do_response(responses.get(is.getPacket().getSeqId()), is.getMetaData(), is.getCharestName());
+                        do_response(responses.get(is.getPacket().getSeqId()), is.getMetaData(), is.getCharsetName());
             }
             return result;
         } catch (InterruptedException e) {
@@ -144,13 +144,13 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
         if (request == null) {
             throw new IllegalArgumentException("request can't be NULL!");
         }
-        if (StringUtils.isBlank(request.getCharestName())) {
-            //use default charestName
-            request.setCharestName(this.charestName);
+        if (StringUtils.isBlank(request.getCharsetName())) {
+            //use default charsetName
+            request.setCharsetName(this.charsetName);
         }
         byte data[] = protocol.encode(request);
         BasePacket packet = new BasePacket(type, id.getAndIncrement(), data);
-        batchRequest.add(new internal_struct(packet, metaData, request.getCharestName()));
+        batchRequest.add(new internal_struct(packet, metaData, request.getCharsetName()));
         return null;
     }
 
@@ -160,12 +160,12 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
 
         private TDHSMetaData metaData;
 
-        private String charestName;
+        private String charsetName;
 
-        private internal_struct(BasePacket packet, TDHSMetaData metaData, String charestName) {
+        private internal_struct(BasePacket packet, TDHSMetaData metaData, String charsetName) {
             this.packet = packet;
             this.metaData = metaData;
-            this.charestName = charestName;
+            this.charsetName = charsetName;
         }
 
         public BasePacket getPacket() {
@@ -176,8 +176,8 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
             return metaData;
         }
 
-        public String getCharestName() {
-            return charestName;
+        public String getCharsetName() {
+            return charsetName;
         }
     }
 

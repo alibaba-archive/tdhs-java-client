@@ -51,32 +51,32 @@ public class StatementImpl implements Statement {
 
     protected final int timeOut; //ms
 
-    protected String charestName;
+    protected String charsetName;
 
     private long hash = 0;
 
     public StatementImpl(TDHSNet tdhsNet, AtomicLong id,
                          ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses,
-                         TDHSProtocol protocol, int timeOut, String charestName) {
+                         TDHSProtocol protocol, int timeOut, String charsetName) {
         this.tdhsNet = tdhsNet;
         this.id = id;
         this.responses = responses;
         this.protocol = protocol;
         this.timeOut = timeOut;
-        this.charestName = charestName;
+        this.charsetName = charsetName;
         this.hash = 0;
     }
 
 
     public StatementImpl(TDHSNet tdhsNet, AtomicLong id,
                          ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses,
-                         TDHSProtocol protocol, int timeOut, String charestName, int hash) {
+                         TDHSProtocol protocol, int timeOut, String charsetName, int hash) {
         this.tdhsNet = tdhsNet;
         this.id = id;
         this.responses = responses;
         this.protocol = protocol;
         this.timeOut = timeOut;
-        this.charestName = charestName;
+        this.charsetName = charsetName;
         this.hash = hash & 0xFFFFFFFFL;
     }
 
@@ -191,9 +191,9 @@ public class StatementImpl implements Statement {
         if (request == null) {
             throw new IllegalArgumentException("request can't be NULL!");
         }
-        if (StringUtils.isBlank(request.getCharestName())) {
-            //use default charestName
-            request.setCharestName(this.charestName);
+        if (StringUtils.isBlank(request.getCharsetName())) {
+            //use default charsetName
+            request.setCharsetName(this.charsetName);
         }
         byte data[] = protocol.encode(request);
         BasePacket packet = new BasePacket(type, id.getAndIncrement(), hash, data);
@@ -202,7 +202,7 @@ public class StatementImpl implements Statement {
         responses.put(seqId, queue);
         try {
             tdhsNet.write(packet);
-            return do_response(queue, metaData, request.getCharestName());
+            return do_response(queue, metaData, request.getCharsetName());
         } finally {
             responses.remove(seqId);
             queue = null;
@@ -210,7 +210,7 @@ public class StatementImpl implements Statement {
     }
 
     protected TDHSResponse do_response(ArrayBlockingQueue<BasePacket> queue, TDHSMetaData metaData,
-                                       String charestName)
+                                       String charsetName)
             throws TDHSException {
         ByteArrayOutputStream retData = new ByteArrayOutputStream();
         try {
@@ -225,10 +225,10 @@ public class StatementImpl implements Statement {
                     } else if (TDHSResponseEnum.ClientStatus.OK.equals(ret.getClientStatus())) {
                         retData.write(ret.getData());
                         return new TDHSResponse(ret.getClientStatus(), metaData, retData.toByteArray(),
-                                charestName);
+                                charsetName);
                     } else if (ret.getClientStatus() != null && ret.getClientStatus().getStatus() >= 400 &&
                             ret.getClientStatus().getStatus() < 600) {
-                        return new TDHSResponse(ret.getClientStatus(), metaData, ret.getData(), charestName);
+                        return new TDHSResponse(ret.getClientStatus(), metaData, ret.getData(), charsetName);
                     } else {
                         throw new TDHSException("unknown response code! [" + (ret.getClientStatus() != null ?
                                 String.valueOf(ret.getClientStatus().getStatus()) : "") + "]");

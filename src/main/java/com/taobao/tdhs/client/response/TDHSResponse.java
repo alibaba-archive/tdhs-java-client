@@ -13,6 +13,7 @@ package com.taobao.tdhs.client.response;
 
 import com.taobao.tdhs.client.exception.TDHSException;
 import com.taobao.tdhs.client.util.ByteOrderUtil;
+import com.taobao.tdhs.client.util.ConvertUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.PrintWriter;
@@ -40,9 +41,11 @@ public class TDHSResponse {
 
     private List<List<String>> fieldData;
 
+    private List<List<byte[]>> fieldOriData;
+
     private byte data[];
 
-    private String charestName;
+    private String charsetName;
 
     private boolean isParsed = false;
 
@@ -55,15 +58,15 @@ public class TDHSResponse {
      * @param status      of type ClientStatus    ,client status from sever-side
      * @param metaData    of type TDHSMetaData    ,meta data from client
      * @param data        of type byte[]          ,data from server-side need to parse
-     * @param charestName of type String          ,charest for decoding
+     * @param charsetName of type String          ,charest for decoding
      */
     public TDHSResponse(TDHSResponseEnum.ClientStatus status, TDHSMetaData metaData, byte[] data,
-                        String charestName) {
+                        String charsetName) {
         this.status = status;
         this.metaData = metaData;
         this.data = data;
-        if (StringUtils.isNotBlank(charestName)) {
-            this.charestName = charestName;
+        if (StringUtils.isNotBlank(charsetName)) {
+            this.charsetName = charsetName;
         }
     }
 
@@ -79,11 +82,7 @@ public class TDHSResponse {
         if (400 <= status.getStatus() && 600 > status.getStatus()) {
             parseFailed(this.data);
         } else if (TDHSResponseEnum.ClientStatus.OK.equals(status)) {
-            try {
-                parseData(this.data);
-            } catch (UnsupportedEncodingException e) {
-                throw new TDHSException(e);
-            }
+            parseData(this.data);
         } else {
             throw new TDHSException("unknown response code!");
         }
@@ -109,13 +108,11 @@ public class TDHSResponse {
      * parse the data if the client status is successed
      *
      * @param data of type byte[] ,data from server-side need to parse
-     *
-     * @throws UnsupportedEncodingException when charsetName is not supported
      */
-    private void parseData(final byte data[]) throws UnsupportedEncodingException {
+    private void parseData(final byte data[]) {
         int len = data.length;
         int pos = 0;
-        fieldData = new ArrayList<List<String>>();
+        fieldOriData = new ArrayList<List<byte[]>>();
         //read field number
         fieldNumber = (int) ByteOrderUtil.getUnsignInt(data, pos);
         pos += 4;
@@ -125,45 +122,68 @@ public class TDHSResponse {
             pos++;
         }
         while (pos < len) {
-            List<String> record = new ArrayList<String>(fieldNumber);
+            List<byte[]> record = new ArrayList<byte[]>(fieldNumber);
             for (int i = 0; i < fieldNumber; i++) {
                 int fieldLength = (int) ByteOrderUtil.getUnsignInt(data, pos);
                 pos += 4;
                 if (fieldLength > 0) {
-                    if (fieldLength == 1 && data[pos] == 0) {
-                        record.add("");
-                    } else {
-                        byte f[] = new byte[fieldLength];
-                        System.arraycopy(data, pos, f, 0, fieldLength);
-                        record.add(
-                                StringUtils.isNotBlank(charestName) ? new String(f, this.charestName) : new String(f));
-                    }
+                    byte f[] = new byte[fieldLength];
+                    System.arraycopy(data, pos, f, 0, fieldLength);
+                    record.add(f);
                     pos += fieldLength;
                 } else {
-                    record.add(null);
+                    record.add(new byte[0]);
                 }
             }
-            fieldData.add(record);
+            fieldOriData.add(record);
+        }
+    }
+
+
+    /**
+     * Method parseFieldData ...
+     *
+     * @throws TDHSException when
+     */
+    private void parseFieldData() throws TDHSException {
+        parse();
+        fieldData = new ArrayList<List<String>>();
+        if (fieldOriData != null && !fieldOriData.isEmpty()) {
+            try {
+                for (List<byte[]> record : fieldOriData) {
+                    if (record != null) {
+                        List<String> strRecord = new ArrayList<String>(record.size());
+                        for (byte[] f : record) {
+                            strRecord.add(ConvertUtil.getStringFromByte(f, this.charsetName));
+                        }
+                        fieldData.add(strRecord);
+                    } else {
+                        fieldData.add(null);
+                    }
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw new TDHSException(e);
+            }
         }
     }
 
     /**
-     * Method getCharestName returns the charestName of this TDHSResponse object.
+     * Method getCharsetName returns the charsetName of this TDHSResponse object.
      *
-     * @return the charestName (type String) of this TDHSResponse object.
+     * @return the charsetName (type String) of this TDHSResponse object.
      */
-    public String getCharestName() {
-        return charestName;
+    public String getCharsetName() {
+        return charsetName;
     }
 
     /**
-     * Method setCharestName sets the charestName of this TDHSResponse object.
+     * Method setCharsetName sets the charsetName of this TDHSResponse object.
      *
-     * @param charestName the charestName of this TDHSResponse object.
+     * @param charsetName the charsetName of this TDHSResponse object.
      */
-    public void setCharestName(String charestName) {
-        if (StringUtils.isNotBlank(charestName)) {
-            this.charestName = charestName;
+    public void setCharsetName(String charsetName) {
+        if (StringUtils.isNotBlank(charsetName)) {
+            this.charsetName = charsetName;
         }
     }
 
@@ -221,8 +241,23 @@ public class TDHSResponse {
      * @throws TDHSException when
      */
     public List<List<String>> getFieldData() throws TDHSException {
-        parse();
+        if (fieldData != null) {
+            return fieldData;
+        }
+        parseFieldData();
         return fieldData;
+    }
+
+    /**
+     * Method getFieldOriData returns the fieldOriData of this TDHSResponse object.
+     *
+     * @return the fieldOriData (type List<List<byte[]>>) of this TDHSResponse object.
+     *
+     * @throws TDHSException when
+     */
+    public List<List<byte[]>> getFieldOriData() throws TDHSException {
+        parse();
+        return fieldOriData;
     }
 
     /**
@@ -255,7 +290,7 @@ public class TDHSResponse {
      */
     public ResultSet getResultSet() throws TDHSException {
         if (TDHSResponseEnum.ClientStatus.OK.equals(status)) {
-            return new TDHSResutSet(getFieldNames(), metaData, getFieldTypes(), getFieldData());
+            return new TDHSResultSet(getFieldNames(), metaData, getFieldTypes(), getFieldOriData(), charsetName);
         }
         return null;
     }
@@ -274,7 +309,7 @@ public class TDHSResponse {
             if (alias == null || alias.size() != getFieldNames().size()) {
                 throw new TDHSException("alias is wrong! alias:[" + alias + "] fieldNames:[" + getFieldNames() + "]");
             }
-            return new TDHSResutSet(alias, metaData, getFieldTypes(), getFieldData());
+            return new TDHSResultSet(alias, metaData, getFieldTypes(), getFieldOriData(), charsetName);
         }
         return null;
     }
