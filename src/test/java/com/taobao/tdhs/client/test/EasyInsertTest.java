@@ -54,7 +54,7 @@ public class EasyInsertTest extends TestBase {
 	@Test
 	public void testNullValue() throws TDHSException {
 		TDHSResponse r = client.insert().use(db).from(table)
-				.value(fields[0], null).insert();
+				.value(fields[0], (String) null).insert();
 		Assert.assertEquals(ClientStatus.OK, r.getStatus());
 
 		r = client.delete(db, table, null, new String[][] { { "0" } },

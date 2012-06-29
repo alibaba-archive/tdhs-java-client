@@ -94,6 +94,24 @@ public interface Set {
     Query set(char value);
 
     /**
+     * Method set ...
+     *
+     * @param value of type byte
+     *
+     * @return Query
+     */
+    Query set(byte value);
+
+    /**
+     * Method set ...
+     *
+     * @param value of type byte[]
+     *
+     * @return Query
+     */
+    Query set(byte[] value);
+
+    /**
      * set now() to field
      *
      * @return Query

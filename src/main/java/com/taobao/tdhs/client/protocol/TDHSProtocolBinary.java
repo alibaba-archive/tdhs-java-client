@@ -86,6 +86,8 @@ public class TDHSProtocolBinary implements TDHSProtocol {
             TDHSEncodeException, IllegalAccessException {
         if (o == null || o instanceof String) {
             writeToStream((String) o, out, charsetName);
+        } else if (o instanceof byte[]) {
+            writeToStream((byte[]) o, out);
         } else if (o instanceof Integer) {
             if (fieldName.startsWith("____")) {
                 writeInt8ToStream((Integer) o, out);
@@ -97,7 +99,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         } else if (o instanceof Object[]) {
             writeToStream((Object[]) o, out, charsetName);
         } else {
-            throw new TDHSEncodeException("unkown type!");
+            throw new TDHSEncodeException("unknown type!");
         }
     }
 
@@ -115,6 +117,17 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         }
     }
 
+    private static void writeToStream(byte[] v, ByteArrayOutputStream out)
+            throws IOException {
+        if (v == null) {
+            writeInt32ToStream(0, out);
+        } else {
+            writeInt32ToStream(v.length + 1, out);
+            out.write(v);
+            out.write(0); //因为服务端计算长度是会减去最后0的长度,所以使用byte[]时需要加上一个0
+        }
+    }
+
 
     private static void writeToStream(Object[] array, ByteArrayOutputStream out, String charsetName) throws IOException,
             TDHSEncodeException, IllegalAccessException {
@@ -122,6 +135,8 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         for (Object o : array) {
             if (o == null || o instanceof String) {
                 writeToStream((String) o, out, charsetName);
+            } else if (o instanceof byte[]) {
+                writeToStream((byte[]) o, out);
             } else if (o instanceof Integer) {
                 writeInt32ToStream((Integer) o, out);
             } else if (o instanceof Request) {
@@ -131,7 +146,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
             } else if (o instanceof Object[]) {
                 writeToStream((Object[]) o, out, charsetName);
             } else {
-                throw new TDHSEncodeException("unkown type!");
+                throw new TDHSEncodeException("unknown type!");
             }
 
         }

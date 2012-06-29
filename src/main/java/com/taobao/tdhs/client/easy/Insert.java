@@ -91,6 +91,26 @@ public interface Insert {
     Insert value(String field, char value);
 
     /**
+     * insert the value into field
+     *
+     * @param field of type String
+     * @param value of type byte
+     *
+     * @return Insert
+     */
+    Insert value(String field, byte value);
+
+    /**
+     * insert the value into field
+     *
+     * @param field of type String
+     * @param value of type byte[]
+     *
+     * @return Insert
+     */
+    Insert value(String field, byte[] value);
+
+    /**
      * insert now() into field
      *
      * @param field of type String

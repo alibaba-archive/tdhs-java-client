@@ -52,7 +52,15 @@ public class Insert extends RequestWithCharest implements Request {
         addValue(TDHSCommon.UpdateFlag.TDHS_UPDATE_SET, entry);
     }
 
+    public void addValue(byte[] entry) {
+        addValue(TDHSCommon.UpdateFlag.TDHS_UPDATE_SET, entry);
+    }
+
     public void addValue(TDHSCommon.UpdateFlag flag, String value) {
+        _values.add(new ValueEntry(flag, value));
+    }
+
+    public void addValue(TDHSCommon.UpdateFlag flag, byte[] value) {
         _values.add(new ValueEntry(flag, value));
     }
 
@@ -77,7 +85,8 @@ public class Insert extends RequestWithCharest implements Request {
         }
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Insert{" +
                 "tableInfo=" + tableInfo +
                 ", values=" + _values +

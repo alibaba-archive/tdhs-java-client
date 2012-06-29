@@ -20,18 +20,46 @@ import com.taobao.tdhs.client.exception.TDHSEncodeException;
  */
 public class ValueEntry implements Request {
     private int ____flag;
+    //String or byte
+    private Object _value;
 
-    private String _value;
-
+    /**
+     * Constructor ValueEntry creates a new ValueEntry instance.
+     *
+     * @param flag   of type UpdateFlag
+     * @param _value of type String
+     */
     public ValueEntry(TDHSCommon.UpdateFlag flag, String _value) {
         this.____flag = flag.getValue();
         this._value = _value;
     }
 
+    /**
+     * Constructor ValueEntry creates a new ValueEntry instance.
+     *
+     * @param flag   of type UpdateFlag
+     * @param _value of type byte[]
+     */
+    public ValueEntry(TDHSCommon.UpdateFlag flag, byte[] _value) {
+        this.____flag = flag.getValue();
+        this._value = _value;
+    }
+
+    /**
+     * Method isVaild ...
+     *
+     * @throws TDHSEncodeException when
+     */
     public void isVaild() throws TDHSEncodeException {
     }
 
-    @Override public String toString() {
+    /**
+     * Method toString ...
+     *
+     * @return String
+     */
+    @Override
+    public String toString() {
         return "ValueEntry{" +
                 "flag=" + ____flag +
                 ", value='" + _value + '\'' +

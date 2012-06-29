@@ -45,6 +45,10 @@ public class Update extends RequestWithCharest implements Request {
         _valueEntries.add(new ValueEntry(flag, value));
     }
 
+    public void addEntry(TDHSCommon.UpdateFlag flag, byte[] value) {
+        _valueEntries.add(new ValueEntry(flag, value));
+    }
+
     public void addEntry(ValueEntry entry) {
         _valueEntries.add(entry);
     }
@@ -66,7 +70,8 @@ public class Update extends RequestWithCharest implements Request {
         }
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Update{" +
                 "get=" + get +
                 ", valueEntries=" + _valueEntries +
