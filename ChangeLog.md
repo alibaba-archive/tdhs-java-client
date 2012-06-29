@@ -4,6 +4,7 @@
 * Support Blob and Clob
 * Fix some sql parse bug!
 * Add SimplePooledTDHSDataSource
+* Support byte[] data with insert/update
 
 0.3.2.1(2012-06-08)
 ---------------------------

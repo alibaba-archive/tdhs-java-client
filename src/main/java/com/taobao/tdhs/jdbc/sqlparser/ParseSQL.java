@@ -31,6 +31,8 @@ public class ParseSQL {
     private static Logger logger = Logger.getLogger(ParseSQL.class);
 
     // 原始的SQL语句
+    private String oriSql;
+
     private String sql;
     // SQL类型 insert 0,update 1,delete 2,普通 select 3
     private SQLType sqlType;
@@ -73,6 +75,7 @@ public class ParseSQL {
 
     // 构造函数
     public ParseSQL(@NotNull String sql) {
+        this.oriSql = sql;
         sql = sql.trim();
         if (StringUtils.endsWith(sql, ";")) {
             sql = sql.substring(0, sql.length() - 1);
@@ -93,7 +96,7 @@ public class ParseSQL {
     }
 
     public String getSql() {
-        return sql;
+        return oriSql;
     }
 
     public SQLType getSqlType() {

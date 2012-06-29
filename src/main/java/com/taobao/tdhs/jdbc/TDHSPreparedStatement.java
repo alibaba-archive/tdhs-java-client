@@ -62,16 +62,23 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
             sb.append(sqlSplited[i - 1]).append(parameters.get(i));
         }
         sb.append(sqlSplited[parameterNumber]);
-        clearParameters();
         return sb.toString();
     }
 
     public ResultSet executeQuery() throws SQLException {
-        return executeQuery(mergeSQL());
+        try {
+            return executeQuery(mergeSQL());
+        } finally {
+            clearParameters();
+        }
     }
 
     public int executeUpdate() throws SQLException {
-        return executeUpdate(mergeSQL());
+        try {
+            return executeUpdate(mergeSQL());
+        } finally {
+            clearParameters();
+        }
     }
 
     public void setNull(int parameterIndex, int sqlType) throws SQLException {
@@ -129,7 +136,12 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
     }
 
     public void setBytes(int parameterIndex, byte[] x) throws SQLException {
-        setString(parameterIndex, x == null ? null : new String(x));
+        checkclose();
+        if (parameterIndex < 1 || parameterIndex > this.parameterNumber) {
+            throw new SQLException("parameterIndex is out of range,parameterIndex is " + parameterIndex);
+        }
+        setString(parameterIndex, x == null ? null : BYTE_PARAMETER_PREFIX + parameterIndex);
+        super.byteParameters.put(parameterIndex, x);
     }
 
     public void setDate(int parameterIndex, Date x) throws SQLException {
@@ -170,6 +182,7 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
     }
 
     public void clearParameters() throws SQLException {
+        byteParameters.clear();
         parameters.clear();
     }
 
@@ -182,11 +195,19 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
     }
 
     public boolean execute() throws SQLException {
-        return execute(mergeSQL());
+        try {
+            return execute(mergeSQL());
+        } finally {
+            clearParameters();
+        }
     }
 
     public void addBatch() throws SQLException {
-        addBatch(mergeSQL());
+        try {
+            addBatch(mergeSQL());
+        } finally {
+            clearParameters();
+        }
     }
 
     public void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException {
@@ -211,7 +232,7 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
     }
 
     public void setBlob(int parameterIndex, Blob x) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        setBlob(parameterIndex, x.getBinaryStream());
     }
 
     public void setClob(int parameterIndex, Clob x) throws SQLException {
@@ -283,7 +304,7 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
     }
 
     public void setBlob(int parameterIndex, InputStream inputStream, long length) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        setAsciiStream(parameterIndex, inputStream, length);
     }
 
     public void setNClob(int parameterIndex, Reader reader, long length) throws SQLException {
@@ -339,7 +360,7 @@ public class TDHSPreparedStatement extends TDHSStatement implements PreparedStat
     }
 
     public void setBlob(int parameterIndex, InputStream inputStream) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        setAsciiStream(parameterIndex, inputStream);
     }
 
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {

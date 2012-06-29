@@ -31,10 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author <a href="mailto:wentong@taobao.com">文通</a>
@@ -58,6 +55,10 @@ public class TDHSStatement implements Statement {
 
     private BatchStatement batchStatement = null;
 
+    protected final Map<Integer, byte[]> byteParameters = new HashMap<Integer, byte[]>();
+
+    protected final static String BYTE_PARAMETER_PREFIX = "___________________";
+
     public TDHSStatement(Connection connection, TDHSClient client, String db) {
         this.connection = connection;
         this.client = client;
@@ -67,7 +68,7 @@ public class TDHSStatement implements Statement {
     public ResultSet executeQuery(String sql) throws SQLException {
         execute(sql);
         if (currentResultSet == null) {
-            throw new TDHSSQLException("None Resultset!", sql);
+            throw new TDHSSQLException("None ResultSet!", sql);
         }
         return currentResultSet;
     }
@@ -358,7 +359,19 @@ public class TDHSStatement implements Statement {
                     if (value == null) {
                         throw new TDHSSQLException("update value is error!", parseSQL.getSql());
                     }
-                    query.set().field(field).set(value);
+
+                    if (StringUtils.startsWith(value, BYTE_PARAMETER_PREFIX)) {
+                        int pidx =
+                                ConvertUtil.safeConvertInt(StringUtils.substring(value, BYTE_PARAMETER_PREFIX.length()),
+                                        -1);
+                        if (byteParameters.containsKey(pidx)) {
+                            query.set().field(field).set(byteParameters.get(pidx));
+                        } else {
+                            query.set().field(field).set(value);
+                        }
+                    } else {
+                        query.set().field(field).set(value);
+                    }
                 }
             }
         }
@@ -396,7 +409,17 @@ public class TDHSStatement implements Statement {
                 if (value == null) {
                     throw new TDHSSQLException("insert value is error!", parseSQL.getSql());
                 }
-                insert.value(field, value);
+                if (StringUtils.startsWith(value, BYTE_PARAMETER_PREFIX)) {
+                    int pidx = ConvertUtil.safeConvertInt(StringUtils.substring(value, BYTE_PARAMETER_PREFIX.length()),
+                            -1);
+                    if (byteParameters.containsKey(pidx)) {
+                        insert.value(field, byteParameters.get(pidx));
+                    } else {
+                        insert.value(field, value);
+                    }
+                } else {
+                    insert.value(field, value);
+                }
             }
         }
         TDHSResponse response = null;
@@ -764,7 +787,10 @@ public class TDHSStatement implements Statement {
 
         public PreproccessSQL invoke() throws SQLException {
             parseSQL = parseSQL(sql);
-            tableName = parseSQL.getTableName();
+            tableName = StringUtil.escapeField(parseSQL.getTableName());
+            if (tableName == null) {
+                throw new TDHSSQLException("can't parse table name!", sql);
+            }
             dbName = db;
             if (StringUtils.contains(tableName, ".")) {
                 String[] strings = StringUtils.split(tableName, ".");
