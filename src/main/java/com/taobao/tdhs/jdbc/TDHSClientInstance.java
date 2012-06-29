@@ -80,7 +80,7 @@ public final class TDHSClientInstance {
                 Boolean.valueOf(info.getProperty(NonRegisteringDriver.NEED_RECONNECT_PROPERTY_KEY, "true"));
         int connectTimeOut = ConvertUtil
                 .safeConvertInt(info.getProperty(NonRegisteringDriver.CONNECT_TIMEOUT_PROPERTY_KEY, "1000"), 1000);
-        String charsetName = info.getProperty(NonRegisteringDriver.CHAREST_NAME_PROPERTY_KEY);
+        String charsetName = info.getProperty(NonRegisteringDriver.CHARSET_NAME_PROPERTY_KEY);
         String readCode = info.getProperty(NonRegisteringDriver.READ_CODE_PROPERTY_KEY);
 
         String writeCode = info.getProperty(NonRegisteringDriver.WRITE_CODE_PROPERTY_KEY);

@@ -53,7 +53,7 @@ public class NonRegisteringDriver implements java.sql.Driver {
 
     public static final String CONNECT_TIMEOUT_PROPERTY_KEY = TDHSClient.CONNECT_TIMEOUT;
 
-    public static final String CHAREST_NAME_PROPERTY_KEY = TDHSClient.CHAREST_NAME;
+    public static final String CHARSET_NAME_PROPERTY_KEY = TDHSClient.CHARSET_NAME;
 
 
     public NonRegisteringDriver() throws SQLException {

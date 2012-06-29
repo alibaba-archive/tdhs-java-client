@@ -28,7 +28,7 @@ public interface TDHSClient extends Statement {
     public static final String TIME_OUT = "timeOut";
     public static final String NEED_RECONNECT = "needReconnect";
     public static final String CONNECT_TIMEOUT = "connectTimeout";
-    public static final String CHAREST_NAME = "charsetName";
+    public static final String CHARSET_NAME = "charsetName";
     public static final String READ_CODE = "readCode";
     public static final String WRITE_CODE = "writeCode";
 

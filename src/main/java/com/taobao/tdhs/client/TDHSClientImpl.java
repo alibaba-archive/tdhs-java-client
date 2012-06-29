@@ -69,7 +69,7 @@ public class TDHSClientImpl implements TDHSClient {
                 props.containsKey(TIME_OUT) ? (Integer) props.get(TIME_OUT) : 1000,
                 props.containsKey(NEED_RECONNECT) ? (Boolean) props.get(NEED_RECONNECT) : true,
                 props.containsKey(CONNECT_TIMEOUT) ? (Integer) props.get(CONNECT_TIMEOUT) : 1000,
-                props.containsKey(CHAREST_NAME) ? (String) props.get(CHAREST_NAME) : null,
+                props.containsKey(CHARSET_NAME) ? (String) props.get(CHARSET_NAME) : null,
                 props.containsKey(READ_CODE) ? (String) props.get(READ_CODE) : null,
                 props.containsKey(WRITE_CODE) ? (String) props.get(WRITE_CODE) : null);
     }
