@@ -1730,7 +1730,7 @@ public class TDHSDatabaseMetaData implements DatabaseMetaData {
      * @throws SQLException when
      */
     public boolean supportsBatchUpdates() throws SQLException {
-        return false;  //FIXME 编写实现
+        return true;
     }
 
     /**
