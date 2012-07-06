@@ -38,11 +38,16 @@ public class TDHSConnection implements Connection {
     private final Properties prop;
     private boolean autoCommit = true;
 
+    private int fakeTransactionIsolation = TRANSACTION_NONE;
+
+    private final boolean fakeTransaction;
+
 
     public TDHSConnection(@NotNull TDHSClientInstance.ClientKey key, @NotNull Properties prop) {
         this.key = key;
         this.prop = prop;
         this.dbName = this.prop.getProperty(NonRegisteringDriver.DBNAME_PROPERTY_KEY);
+        this.fakeTransaction = Boolean.valueOf(this.prop.getProperty(NonRegisteringDriver.FAKE_TRANSACTION));
     }
 
     private TDHSClient getClient() {
@@ -125,11 +130,19 @@ public class TDHSConnection implements Connection {
     }
 
     public void setTransactionIsolation(int level) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        if (fakeTransaction) {
+            fakeTransactionIsolation = level;
+        } else {
+            throw new SQLFeatureNotSupportedException();
+        }
     }
 
     public int getTransactionIsolation() throws SQLException {
-        throw new SQLFeatureNotSupportedException();
+        if (fakeTransaction) {
+            return fakeTransactionIsolation;
+        } else {
+            return Connection.TRANSACTION_NONE;
+        }
     }
 
     public SQLWarning getWarnings() throws SQLException {
