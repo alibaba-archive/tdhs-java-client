@@ -450,7 +450,7 @@ public class TDHSStatement implements Statement {
                             "DB Handler return error code [" + response.getMySQLHandlerErrorCode() + "]");
                 } else {
                     throw new SQLException(
-                            "return error [" + response.getErrorCode().getErrorMsg() + "]");
+                            "return error [" + response.getErrorCode() + "]");
                 }
             } else {
                 if (alias != null) {
