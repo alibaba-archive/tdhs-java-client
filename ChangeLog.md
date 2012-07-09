@@ -5,6 +5,8 @@
 * Fix some sql parse bug!
 * Add SimplePooledTDHSDataSource
 * Support byte[] data with insert/update
+* Add MySQL handler error code description
+* Fix enum with unknown value
 
 0.3.2.1(2012-06-08)
 ---------------------------

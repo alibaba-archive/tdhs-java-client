@@ -29,7 +29,7 @@ public class TDHSResultSet implements ResultSet {
 
     private final Map<String, Integer> fieldMap = new HashMap<String, Integer>();
 
-    private final List<TDHSResponseEnum.FieldType> fieldTypes;
+    private final List<TDHSResponseEnum.IFieldType> fieldTypes;
 
     private final List<List<byte[]>> fieldData;
 
@@ -55,7 +55,7 @@ public class TDHSResultSet implements ResultSet {
      * @param fieldTypes of type List<FieldType>
      * @param fieldData  of type List<List<byte[]>>
      */
-    public TDHSResultSet(List<String> alias, TDHSMetaData metaData, List<TDHSResponseEnum.FieldType> fieldTypes,
+    public TDHSResultSet(List<String> alias, TDHSMetaData metaData, List<TDHSResponseEnum.IFieldType> fieldTypes,
                          List<List<byte[]>> fieldData, String charsetName) {
         if (alias != null) {
             int i = 1;
@@ -70,7 +70,7 @@ public class TDHSResultSet implements ResultSet {
         if (fieldTypes != null) {
             this.fieldTypes = fieldTypes;
         } else {
-            this.fieldTypes = new ArrayList<TDHSResponseEnum.FieldType>();
+            this.fieldTypes = new ArrayList<TDHSResponseEnum.IFieldType>();
         }
 
         this.fieldData = fieldData;
@@ -634,62 +634,65 @@ public class TDHSResultSet implements ResultSet {
     public Object getObject(int columnIndex) throws SQLException {
         this.checkRow(columnIndex);
         this.checkType(columnIndex);
-        TDHSResponseEnum.FieldType fieldType = fieldTypes.get(columnIndex - 1);
-        switch (fieldType) {
-            case MYSQL_TYPE_DECIMAL:
-                return this.getBigDecimal(columnIndex);
-            case MYSQL_TYPE_TINY:
-                return this.getByte(columnIndex);
-            case MYSQL_TYPE_SHORT:
-                return this.getShort(columnIndex);
-            case MYSQL_TYPE_LONG:
-                return this.getLong(columnIndex);
-            case MYSQL_TYPE_FLOAT:
-                return this.getFloat(columnIndex);
-            case MYSQL_TYPE_DOUBLE:
-                return this.getDouble(columnIndex);
-            case MYSQL_TYPE_NULL:
-                return null;
-            case MYSQL_TYPE_TIMESTAMP:
-                return this.getTimestamp(columnIndex);
-            case MYSQL_TYPE_LONGLONG:
-                return this.getBigDecimal(columnIndex);
-            case MYSQL_TYPE_INT24:
-                return this.getBigDecimal(columnIndex);
-            case MYSQL_TYPE_DATE:
-                return this.getDate(columnIndex);
-            case MYSQL_TYPE_TIME:
-                return this.getTime(columnIndex);
-            case MYSQL_TYPE_DATETIME:
-                return this.getDate(columnIndex);
-            case MYSQL_TYPE_YEAR:
-                return this.getDate(columnIndex);
-            case MYSQL_TYPE_NEWDATE:
-                return this.getDate(columnIndex);
-            case MYSQL_TYPE_VARCHAR:
-                return this.getString(columnIndex);
-            case MYSQL_TYPE_BIT:
-                return this.getBoolean(columnIndex);
-            case MYSQL_TYPE_NEWDECIMAL:
-                return this.getBigDecimal(columnIndex);
-            case MYSQL_TYPE_ENUM:
-                return this.getString(columnIndex);
-            case MYSQL_TYPE_SET:
-                return this.getString(columnIndex);
-            case MYSQL_TYPE_TINY_BLOB:
-                return this.getBytes(columnIndex);
-            case MYSQL_TYPE_MEDIUM_BLOB:
-                return this.getBytes(columnIndex);
-            case MYSQL_TYPE_LONG_BLOB:
-                return this.getBytes(columnIndex);
-            case MYSQL_TYPE_BLOB:
-                return this.getBytes(columnIndex);
-            case MYSQL_TYPE_VAR_STRING:
-                return this.getString(columnIndex);
-            case MYSQL_TYPE_STRING:
-                return this.getString(columnIndex);
-            case MYSQL_TYPE_GEOMETRY:
-                return this.getString(columnIndex);
+        TDHSResponseEnum.IFieldType iFieldType = fieldTypes.get(columnIndex - 1);
+        if (iFieldType instanceof TDHSResponseEnum.FieldType) {
+            TDHSResponseEnum.FieldType fieldType = (TDHSResponseEnum.FieldType) iFieldType;
+            switch (fieldType) {
+                case MYSQL_TYPE_DECIMAL:
+                    return this.getBigDecimal(columnIndex);
+                case MYSQL_TYPE_TINY:
+                    return this.getByte(columnIndex);
+                case MYSQL_TYPE_SHORT:
+                    return this.getShort(columnIndex);
+                case MYSQL_TYPE_LONG:
+                    return this.getLong(columnIndex);
+                case MYSQL_TYPE_FLOAT:
+                    return this.getFloat(columnIndex);
+                case MYSQL_TYPE_DOUBLE:
+                    return this.getDouble(columnIndex);
+                case MYSQL_TYPE_NULL:
+                    return null;
+                case MYSQL_TYPE_TIMESTAMP:
+                    return this.getTimestamp(columnIndex);
+                case MYSQL_TYPE_LONGLONG:
+                    return this.getBigDecimal(columnIndex);
+                case MYSQL_TYPE_INT24:
+                    return this.getBigDecimal(columnIndex);
+                case MYSQL_TYPE_DATE:
+                    return this.getDate(columnIndex);
+                case MYSQL_TYPE_TIME:
+                    return this.getTime(columnIndex);
+                case MYSQL_TYPE_DATETIME:
+                    return this.getDate(columnIndex);
+                case MYSQL_TYPE_YEAR:
+                    return this.getDate(columnIndex);
+                case MYSQL_TYPE_NEWDATE:
+                    return this.getDate(columnIndex);
+                case MYSQL_TYPE_VARCHAR:
+                    return this.getString(columnIndex);
+                case MYSQL_TYPE_BIT:
+                    return this.getBoolean(columnIndex);
+                case MYSQL_TYPE_NEWDECIMAL:
+                    return this.getBigDecimal(columnIndex);
+                case MYSQL_TYPE_ENUM:
+                    return this.getString(columnIndex);
+                case MYSQL_TYPE_SET:
+                    return this.getString(columnIndex);
+                case MYSQL_TYPE_TINY_BLOB:
+                    return this.getBytes(columnIndex);
+                case MYSQL_TYPE_MEDIUM_BLOB:
+                    return this.getBytes(columnIndex);
+                case MYSQL_TYPE_LONG_BLOB:
+                    return this.getBytes(columnIndex);
+                case MYSQL_TYPE_BLOB:
+                    return this.getBytes(columnIndex);
+                case MYSQL_TYPE_VAR_STRING:
+                    return this.getString(columnIndex);
+                case MYSQL_TYPE_STRING:
+                    return this.getString(columnIndex);
+                case MYSQL_TYPE_GEOMETRY:
+                    return this.getString(columnIndex);
+            }
         }
         return null;
     }

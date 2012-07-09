@@ -24,7 +24,7 @@ import java.util.List;
  * @since 12-3-23 上午11:27
  */
 public class TDHSResultSetMetaData implements ResultSetMetaData {
-    private final List<TDHSResponseEnum.FieldType> fieldTypes;
+    private final List<TDHSResponseEnum.IFieldType> fieldTypes;
 
     private final List<String> alias;
 
@@ -34,7 +34,7 @@ public class TDHSResultSetMetaData implements ResultSetMetaData {
 
     private final String db;
 
-    public TDHSResultSetMetaData(List<TDHSResponseEnum.FieldType> fieldTypes, List<String> alias,
+    public TDHSResultSetMetaData(List<TDHSResponseEnum.IFieldType> fieldTypes, List<String> alias,
                                  TDHSMetaData metaData) {
         this.fieldTypes = fieldTypes;
         this.alias = alias;
@@ -43,7 +43,7 @@ public class TDHSResultSetMetaData implements ResultSetMetaData {
         this.db = metaData.getDb();
     }
 
-    private TDHSResponseEnum.FieldType getFieldType(int column) throws SQLException {
+    private TDHSResponseEnum.IFieldType getFieldType(int column) throws SQLException {
         if (fieldTypes == null || column <= 0 || column > fieldTypes.size()) {
             throw new SQLException("Invaild column:" + column);
         }
@@ -76,7 +76,7 @@ public class TDHSResultSetMetaData implements ResultSetMetaData {
     }
 
     public boolean isCaseSensitive(int column) throws SQLException {
-        TDHSResponseEnum.FieldType fieldType = getFieldType(column);
+        TDHSResponseEnum.IFieldType fieldType = getFieldType(column);
         int javaType = MysqlUtil.mysqlToJavaType(fieldType.getType());
         switch (javaType) {
             case Types.BIT:
@@ -112,7 +112,7 @@ public class TDHSResultSetMetaData implements ResultSetMetaData {
     }
 
     public boolean isSigned(int column) throws SQLException {
-        TDHSResponseEnum.FieldType fieldType = getFieldType(column);
+        TDHSResponseEnum.IFieldType fieldType = getFieldType(column);
         int javaType = MysqlUtil.mysqlToJavaType(fieldType.getType());
         switch (javaType) {
             case Types.TINYINT:
@@ -168,12 +168,12 @@ public class TDHSResultSetMetaData implements ResultSetMetaData {
     }
 
     public int getColumnType(int column) throws SQLException {
-        TDHSResponseEnum.FieldType fieldType = getFieldType(column);
+        TDHSResponseEnum.IFieldType fieldType = getFieldType(column);
         return MysqlUtil.mysqlToJavaType(fieldType.getType());
     }
 
     public String getColumnTypeName(int column) throws SQLException {
-        TDHSResponseEnum.FieldType fieldType = getFieldType(column);
+        TDHSResponseEnum.IFieldType fieldType = getFieldType(column);
         int javaType = MysqlUtil.mysqlToJavaType(fieldType.getType());
         return MysqlUtil.typeToName(javaType);
     }
@@ -191,7 +191,7 @@ public class TDHSResultSetMetaData implements ResultSetMetaData {
     }
 
     public String getColumnClassName(int column) throws SQLException {
-        TDHSResponseEnum.FieldType fieldType = getFieldType(column);
+        TDHSResponseEnum.IFieldType fieldType = getFieldType(column);
         int javaType = MysqlUtil.mysqlToJavaType(fieldType.getType());
         return MysqlUtil.getClassNameForJavaType(javaType, fieldType);
     }

@@ -447,7 +447,7 @@ public class TDHSStatement implements Statement {
             if (!TDHSResponseEnum.ClientStatus.OK.equals(response.getStatus())) {
                 if (TDHSResponseEnum.ClientStatus.DB_ERROR.equals(response.getStatus())) {
                     throw new SQLException(
-                            "DB Handler return error code [" + response.getDbErrorCode() + "]");
+                            "DB Handler return error code [" + response.getMySQLHandlerErrorCode() + "]");
                 } else {
                     throw new SQLException(
                             "return error [" + response.getErrorCode().getErrorMsg() + "]");

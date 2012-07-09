@@ -580,7 +580,7 @@ public final class MysqlUtil {
 
     }
 
-    public static String getClassNameForJavaType(int javaType, TDHSResponseEnum.FieldType mysqlType) {
+    public static String getClassNameForJavaType(int javaType, TDHSResponseEnum.IFieldType mysqlType) {
         int mysqlTypeIfKnown = mysqlType.getType();
         switch (javaType) {
             case Types.BIT:

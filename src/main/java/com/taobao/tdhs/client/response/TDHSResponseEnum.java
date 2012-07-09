@@ -17,9 +17,81 @@ package com.taobao.tdhs.client.response;
  */
 public class TDHSResponseEnum {
 
-    public enum ClientStatus {
+    /**
+     * Interface IClientStatus ...
+     *
+     * @author wentong
+     *         Created on 12-7-9
+     */
+    public interface IClientStatus {
+        /**
+         * Method name ...
+         *
+         * @return String
+         */
+        String name();
+
+        /**
+         * Method getStatus returns the status of this IClientStatus object.
+         *
+         * @return the status (type int) of this IClientStatus object.
+         */
+        int getStatus();
+    }
+
+    /**
+     * Class DefaultClientStatus ...
+     *
+     * @author wentong
+     *         Created on 12-7-9
+     */
+    public static class DefaultClientStatus implements IClientStatus {
+        private final String name;
+
+        private final int status;
+
+        /**
+         * Constructor DefaultClientStatus creates a new DefaultClientStatus instance.
+         *
+         * @param name   of type String
+         * @param status of type int
+         */
+        public DefaultClientStatus(String name, int status) {
+            this.name = name;
+            this.status = status;
+        }
+
+        /**
+         * Method name ...
+         *
+         * @return String
+         */
+        public String name() {
+            return name;
+        }
+
+        /**
+         * Method getStatus returns the status of this IClientStatus object.
+         *
+         * @return the status (type int) of this IClientStatus object.
+         */
+        public int getStatus() {
+            return status;
+        }
+
+        @Override
+        public String toString() {
+            return "DefaultClientStatus{" +
+                    "name='" + name + '\'' +
+                    ", status=" + status +
+                    '}';
+        }
+    }
+
+
+    public enum ClientStatus implements IClientStatus {
         OK(200), ACCEPT(202), MULTI_STATUS(207), BAD_REQUEST(400), FORBIDDEN(403), NOT_FOUND(404), REQUEST_TIME_OUT(
-                408), SERVER_ERROR(500), NOT_IMPLEMENTED(501), DB_ERROR(502), SERVICE_UNAVAILABLE(503), UNKNOW(-1);
+                408), SERVER_ERROR(500), NOT_IMPLEMENTED(501), DB_ERROR(502), SERVICE_UNAVAILABLE(503);
 
 
         private int status;
@@ -32,23 +104,84 @@ public class TDHSResponseEnum {
             return status;
         }
 
-        public void setStatus(int status) {
-            this.status = status;
-        }
-
-        public static ClientStatus valueOf(int status) {
+        public static IClientStatus valueOf(final int status) {
             for (ClientStatus s : ClientStatus.values()) {
                 if (status == s.getStatus()) {
                     return s;
                 }
             }
-            ClientStatus unknow = UNKNOW;
-            unknow.setStatus(status);
-            return unknow;
+            return new DefaultClientStatus("UNKNOWN", status);
         }
     }
 
-    public enum ErrorCode {
+    /**
+     * Interface IErrorCode ...
+     *
+     * @author wentong
+     *         Created on 12-7-9
+     */
+    public interface IErrorCode {
+
+        /**
+         * Method name ...
+         *
+         * @return String
+         */
+        String name();
+
+        /**
+         * Method getCode returns the code of this IErrorCode object.
+         *
+         * @return the code (type int) of this IErrorCode object.
+         */
+        int getCode();
+
+        /**
+         * Method getErrorMsg returns the errorMsg of this IErrorCode object.
+         *
+         * @return the errorMsg (type String) of this IErrorCode object.
+         */
+        String getErrorMsg();
+
+    }
+
+    public static class DefaultErrorCode implements IErrorCode {
+
+        private final String name;
+
+        private final int code;
+
+        private final String errorMsg;
+
+        public DefaultErrorCode(String name, int code, String errorMsg) {
+            this.name = name;
+            this.code = code;
+            this.errorMsg = errorMsg;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getErrorMsg() {
+            return errorMsg;
+        }
+
+        @Override
+        public String toString() {
+            return "ErrorCode{" +
+                    "name=" + name +
+                    ", code=" + code +
+                    ", errorMsg='" + errorMsg + '\'' +
+                    '}';
+        }
+    }
+
+    public enum ErrorCode implements IErrorCode {
         CLIENT_ERROR_CODE_FAILED_TO_OPEN_TABLE(1, "TDH_SOCKET failed to open table!"),
         CLIENT_ERROR_CODE_FAILED_TO_OPEN_INDEX(2, "TDH_SOCKET failed to open index!"),
         CLIENT_ERROR_CODE_FAILED_TO_MISSING_FIELD(3, "TDH_SOCKET field is missing!"),
@@ -63,8 +196,7 @@ public class TDHSResponseEnum {
         CLIENT_ERROR_CODE_REQUEST_TIME_OUT(11, "TDH_SOCKET request time out!"),
         CLIENT_ERROR_CODE_UNAUTHENTICATION(12, "TDH_SOCKET request is unauthentication!"),
         CLIENT_ERROR_CODE_KILLED(13, "TDH_SOCKET request is killed!"),
-        CLIENT_ERROR_CODE_THROTTLED(14, "TDH_SOCKET request is throttled!"),
-        CLIENT_ERROR_CODE_UNKNOW(-1, "TDH_SOCKET unknow error code!");
+        CLIENT_ERROR_CODE_THROTTLED(14, "TDH_SOCKET request is throttled!");
 
         private int code;
 
@@ -83,31 +215,61 @@ public class TDHSResponseEnum {
             return errorMsg;
         }
 
-        public void setCode(int code) {
-            this.code = code;
-        }
-
-        public static ErrorCode valueOf(int code) {
+        public static IErrorCode valueOf(int code) {
             for (ErrorCode c : ErrorCode.values()) {
                 if (code == c.getCode()) {
                     return c;
                 }
             }
-            ErrorCode clientErrorCodeUnknow = CLIENT_ERROR_CODE_UNKNOW;
-            clientErrorCodeUnknow.setCode(code);
-            return clientErrorCodeUnknow;
+            return new DefaultErrorCode("CLIENT_ERROR_CODE_UNKNOWN", code, "TDH_SOCKET unknown error code!");
         }
 
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return "ErrorCode{" +
-                    "code=" + code +
+                    "name=" + name() +
+                    ", code=" + code +
                     ", errorMsg='" + errorMsg + '\'' +
                     '}';
         }
     }
 
-    public enum FieldType {
+    public interface IFieldType {
+        String name();
+
+        int getType();
+    }
+
+    public static class DefaultFieldType implements IFieldType {
+        private final String name;
+
+        private final int type;
+
+        public DefaultFieldType(String name, int type) {
+            this.name = name;
+            this.type = type;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        @Override
+        public String toString() {
+            return "DefaultFieldType{" +
+                    "name='" + name + '\'' +
+                    ", type=" + type +
+                    '}';
+        }
+    }
+
+
+    public enum FieldType implements IFieldType {
 
         MYSQL_TYPE_DECIMAL(0),
         MYSQL_TYPE_TINY(1),
@@ -149,9 +311,9 @@ public class TDHSResponseEnum {
             return type;
         }
 
-        public static FieldType valueOf(int type) {
-            if (type > 255) {
-                return null;
+        public static IFieldType valueOf(final int type) {
+            if (type < 0 || type >= cached_type.length) {
+                return new DefaultFieldType("MYSQL_TYPE_UNKNOWN", type);
             }
             if (cached_type[type] != null) {
                 return cached_type[type];
@@ -162,7 +324,7 @@ public class TDHSResponseEnum {
                     return t;
                 }
             }
-            return null;
+            return new DefaultFieldType("MYSQL_TYPE_UNKNOWN", type);
         }
     }
 }

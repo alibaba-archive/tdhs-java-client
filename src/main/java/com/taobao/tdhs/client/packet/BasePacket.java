@@ -44,7 +44,7 @@ public class BasePacket {
 
     private TDHSCommon.RequestType commandIdOrResponseCode;
 
-    private TDHSResponseEnum.ClientStatus clientStatus;
+    private TDHSResponseEnum.IClientStatus clientStatus;
 
     private long seqId;
 
@@ -68,13 +68,13 @@ public class BasePacket {
     }
 
 
-    public BasePacket(TDHSResponseEnum.ClientStatus clientStatus, long seqId, byte[] data) {
+    public BasePacket(TDHSResponseEnum.IClientStatus clientStatus, long seqId, byte[] data) {
         this.clientStatus = clientStatus;
         this.seqId = seqId;
         this.data = data;
     }
 
-    public BasePacket(TDHSResponseEnum.ClientStatus clientStatus, long seqId, long reserved, byte[] data) {
+    public BasePacket(TDHSResponseEnum.IClientStatus clientStatus, long seqId, long reserved, byte[] data) {
         this.clientStatus = clientStatus;
         this.seqId = seqId;
         this.data = data;
@@ -90,11 +90,11 @@ public class BasePacket {
     }
 
 
-    public TDHSResponseEnum.ClientStatus getClientStatus() {
+    public TDHSResponseEnum.IClientStatus getClientStatus() {
         return clientStatus;
     }
 
-    public void setClientStatus(TDHSResponseEnum.ClientStatus clientStatus) {
+    public void setClientStatus(TDHSResponseEnum.IClientStatus clientStatus) {
         this.clientStatus = clientStatus;
     }
 

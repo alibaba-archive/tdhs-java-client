@@ -11,6 +11,8 @@
 
 package com.taobao.tdhs.client.response;
 
+import com.taobao.tdhs.client.common.IMySQLHandlerErrorCodes;
+import com.taobao.tdhs.client.common.MySQLHandlerErrorCodes;
 import com.taobao.tdhs.client.exception.TDHSException;
 import com.taobao.tdhs.client.util.ByteOrderUtil;
 import com.taobao.tdhs.client.util.ConvertUtil;
@@ -29,15 +31,15 @@ import java.util.List;
  */
 public class TDHSResponse {
 
-    private TDHSResponseEnum.ClientStatus status;
+    private TDHSResponseEnum.IClientStatus status;
 
-    private TDHSResponseEnum.ErrorCode errorCode;
+    private TDHSResponseEnum.IErrorCode errorCode;
 
     private int dbErrorCode;
 
     private int fieldNumber;
 
-    private List<TDHSResponseEnum.FieldType> fieldTypes;
+    private List<TDHSResponseEnum.IFieldType> fieldTypes;
 
     private List<List<String>> fieldData;
 
@@ -60,7 +62,7 @@ public class TDHSResponse {
      * @param data        of type byte[]          ,data from server-side need to parse
      * @param charsetName of type String          ,charest for decoding
      */
-    public TDHSResponse(TDHSResponseEnum.ClientStatus status, TDHSMetaData metaData, byte[] data,
+    public TDHSResponse(TDHSResponseEnum.IClientStatus status, TDHSMetaData metaData, byte[] data,
                         String charsetName) {
         this.status = status;
         this.metaData = metaData;
@@ -116,7 +118,7 @@ public class TDHSResponse {
         //read field number
         fieldNumber = (int) ByteOrderUtil.getUnsignInt(data, pos);
         pos += 4;
-        fieldTypes = new ArrayList<TDHSResponseEnum.FieldType>(fieldNumber);
+        fieldTypes = new ArrayList<TDHSResponseEnum.IFieldType>(fieldNumber);
         for (int i = 0; i < fieldNumber; i++) {
             fieldTypes.add(TDHSResponseEnum.FieldType.valueOf(data[pos] & 0xFF));
             pos++;
@@ -193,7 +195,7 @@ public class TDHSResponse {
      *
      * @return the status (type ClientStatus) of this TDHSResponse object.
      */
-    public TDHSResponseEnum.ClientStatus getStatus() {
+    public TDHSResponseEnum.IClientStatus getStatus() {
         return status;
     }
 
@@ -204,7 +206,7 @@ public class TDHSResponse {
      *
      * @throws TDHSException when
      */
-    public TDHSResponseEnum.ErrorCode getErrorCode() throws TDHSException {
+    public TDHSResponseEnum.IErrorCode getErrorCode() throws TDHSException {
         parse();
         return errorCode;
     }
@@ -228,7 +230,7 @@ public class TDHSResponse {
      *
      * @throws TDHSException when
      */
-    public List<TDHSResponseEnum.FieldType> getFieldTypes() throws TDHSException {
+    public List<TDHSResponseEnum.IFieldType> getFieldTypes() throws TDHSException {
         parse();
         return fieldTypes;
     }
@@ -270,6 +272,17 @@ public class TDHSResponse {
     public int getDbErrorCode() throws TDHSException {
         parse();
         return dbErrorCode;
+    }
+
+    /**
+     * Method getMySQLHandlerErrorCode returns the mySQLHandlerErrorCode of this TDHSResponse object.
+     *
+     * @return the mySQLHandlerErrorCode (type IMySQLHandlerErrorCodes) of this TDHSResponse object.
+     *
+     * @throws TDHSException when
+     */
+    public IMySQLHandlerErrorCodes getMySQLHandlerErrorCode() throws TDHSException {
+        return MySQLHandlerErrorCodes.valueOf(getDbErrorCode());
     }
 
     /**
@@ -326,6 +339,7 @@ public class TDHSResponse {
                     "status=" + getStatus() +
                     ", errorCode=" + getErrorCode() +
                     ", dbErrorCode=" + getDbErrorCode() +
+                    ", MySQLHandlerErrorCode=" + getMySQLHandlerErrorCode() +
                     ", fieldNumber=" + getFieldNumber() +
                     ", fieldTypes=" + getFieldTypes() +
                     ", fieldData=" + getFieldData() +
@@ -347,7 +361,8 @@ public class TDHSResponse {
         try {
             return "status=" + getStatus() +
                     ", errorCode=" + getErrorCode() +
-                    ", dbErrorCode=" + getDbErrorCode();
+                    ", dbErrorCode=" + getDbErrorCode() +
+                    ", MySQLHandlerErrorCode=" + getMySQLHandlerErrorCode();
         } catch (TDHSException e) {
             PrintWriter pw = new PrintWriter(new StringWriter());
             e.printStackTrace(pw);
