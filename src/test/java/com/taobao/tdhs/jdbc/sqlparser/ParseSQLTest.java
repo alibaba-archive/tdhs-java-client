@@ -31,6 +31,9 @@ public class ParseSQLTest {
         }
         if (ps.getSqlType() == SQLType.SELECT) {
             System.out.println(ps.getColumns());
+            System.out.println("start:"+ps.getLimitOffset());
+            System.out.println("limit:"+ps.getLimit());
+
 
         }
         if (ps.getSqlType() == SQLType.UPDATE) {
@@ -43,7 +46,7 @@ public class ParseSQLTest {
     @Test
     public void test1() {
         String sql =
-                "select/* tdhs:idx_ab(a, b)*/ a as a1,b from db.test where id = 1 and a in (1,2,\"3\") ; and b is null order by a limit 1,2";
+                "select/* tdhs:idx_ab(a, b)*/ a as a1,b from db.test where id = 1 and a in (1,2,\"3\")  and b is null order by a limit 1";
         ParseSQL parseSQL = new ParseSQL(sql);
         parseSQL.sqlDispatch();
         print(parseSQL);

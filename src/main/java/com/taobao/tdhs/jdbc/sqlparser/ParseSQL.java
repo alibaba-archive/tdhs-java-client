@@ -259,9 +259,10 @@ public class ParseSQL {
         String limitstr = sql.substring(addr).trim();
         String[] array_limit = limitstr.split(",");
         if (array_limit.length == 1) {
-            this.limitStart = Integer.valueOf(array_limit[0]);
-            if (this.limitStart < 0) {
-                this.errmsg = "limitStart should larger than 0";
+            this.limitStart = 0;
+            this.limit = Integer.valueOf(array_limit[0]);
+            if (this.limit < 0) {
+                this.errmsg = "limitOffset should larger than 0";
             }
         } else if (array_limit.length == 2) {
             this.limitStart = Integer.valueOf(array_limit[0]);
