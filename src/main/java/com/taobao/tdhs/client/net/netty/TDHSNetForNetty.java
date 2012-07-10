@@ -74,7 +74,7 @@ public class TDHSNetForNetty extends AbstractTDHSNet<Channel> implements TDHSNet
     }
 
     protected void _release() {
-        logger.warn("client is Releasing now!");
+        logger.info("client is Releasing now!");
         isReleasing = true;
         connectionPool.close(new ConnectionPool.Handler<Channel>() {
             public void execute(Channel channel) {

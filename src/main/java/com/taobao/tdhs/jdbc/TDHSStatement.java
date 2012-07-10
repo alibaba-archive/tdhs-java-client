@@ -515,7 +515,7 @@ public class TDHSStatement implements Statement {
     }
 
     public void setQueryTimeout(int seconds) throws SQLException {
-        logger.warn("setQueryTimeout will be ignore!");
+        logger.info("setQueryTimeout will be ignore!");
 //        throw new SQLFeatureNotSupportedException();
     }
 

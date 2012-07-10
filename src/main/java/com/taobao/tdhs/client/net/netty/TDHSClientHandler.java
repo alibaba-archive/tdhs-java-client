@@ -45,7 +45,7 @@ public class TDHSClientHandler extends SimpleChannelUpstreamHandler {
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
         //握手需要被连接池的写锁保护起来
         Channel channel = e.getChannel();
-        logger.warn("channelConnected! channel id:" + channel.getId());
+        logger.info("channelConnected! channel id:" + channel.getId());
         this.tdhsNetForNetty.addConnectedConnectionToPool(channel, new ConnectionPool.Handler<Channel>() {
             public void execute(Channel channel) {
                 channel.write(shakeHandeMessage);
@@ -58,7 +58,7 @@ public class TDHSClientHandler extends SimpleChannelUpstreamHandler {
     public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
         Channel channel = e.getChannel();
         Integer id = channel != null ? channel.getId() : -1;
-        logger.warn("channelDisconnected! channel id:" + id);
+        logger.info("channelDisconnected! channel id:" + id);
         tdhsNetForNetty.needCloseChannel(channel);
     }
 
