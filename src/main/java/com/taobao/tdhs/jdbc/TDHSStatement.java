@@ -128,10 +128,7 @@ public class TDHSStatement implements Statement {
         }
         List<OperationStruct> keys = new ArrayList<OperationStruct>(2);
         HintStruct hint = parseSQL.getHint();
-        if (hint != null) {
-            if (StringUtils.isNotBlank(hint.getErrmsg())) {
-                throw new TDHSSQLException(hint.getErrmsg(), parseSQL.getSql());
-            }
+        if (hint != null && StringUtils.isBlank(hint.getErrmsg())) {
             String index = hint.getIndexName();
             List<String> listIndexColumns = hint.getListIndexColumns();
             if (listIndexColumns == null || listIndexColumns.isEmpty()) {
@@ -186,6 +183,9 @@ public class TDHSStatement implements Statement {
             Where where = query.where().index(index);
             processKey(parseSQL, keys, where);
         } else {
+            if (hint != null && StringUtils.isNotBlank(hint.getErrmsg())) {
+                logger.warn("TDHS: JDBC hint error:" + hint.getErrmsg() + " , SQL:" + parseSQL.getSql());
+            }
             List<String> orderByColumn = parseSQL.getOrderByColumn();
             if ((orderByColumn != null && !orderByColumn.isEmpty()) || parseSQL.getSortMethod() != null) {
                 throw new TDHSSQLException("can't support orderBy without hint!", parseSQL.getSql());
@@ -548,18 +548,26 @@ public class TDHSStatement implements Statement {
             throw new TDHSSQLException("It is readonly, can't executeSelect " + parseSQL.getSqlType().toString() + " !",
                     sql);
         }
+        com.taobao.tdhs.client.statement.Statement s;
+        HintStruct hint = parseSQL.getHint();
+        if (hint != null && StringUtils.isBlank(hint.getErrmsg())) {
+            s = client.createStatement(hint.getHash());
+        } else {
+            s = client;
+        }
+
         switch (parseSQL.getSqlType()) {
             case INSERT:
-                doInsert(client, parseSQL, tableName, dbName);
+                doInsert(s, parseSQL, tableName, dbName);
                 return false;
             case UPDATE:
-                doUpdate(client, parseSQL, tableName, dbName);
+                doUpdate(s, parseSQL, tableName, dbName);
                 return false;
             case DELETE:
-                doDelete(client, parseSQL, tableName, dbName);
+                doDelete(s, parseSQL, tableName, dbName);
                 return false;
             case SELECT:
-                doSelectOrCount(client, parseSQL, tableName, dbName);
+                doSelectOrCount(s, parseSQL, tableName, dbName);
                 return true;
             default:
                 throw new TDHSSQLException("can't parse this SQL!", sql);

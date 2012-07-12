@@ -401,6 +401,7 @@ public class ParseSQL {
             sqlType = SQLType.SELECT;
         } else if (sql.substring(0, 6).equalsIgnoreCase("insert")) {
             // 处理insert
+            analyzeSQLHint();
             parseSQLInsert();
             sqlType = SQLType.INSERT;
         } else if (sql.substring(0, 6).equalsIgnoreCase("update")) {

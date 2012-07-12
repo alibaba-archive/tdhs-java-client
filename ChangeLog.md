@@ -1,3 +1,7 @@
+0.3.2.3(2012-07-12)
+---------------------------
+* JDBC hint support custom hash
+
 0.3.2.2(2012-06-29)
 ---------------------------
 * Fix wrong word  (Some API change name! -..-!)

@@ -45,7 +45,7 @@ public class ErrorTest extends TestBase {
     @Test(expected = TDHSSQLException.class)
     public void testMissIndexField() throws ClassNotFoundException, SQLException {
         execute(getTDHSConnection(),
-                "select/*tdhs:idx_user_auction(user_id)*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 and auction_name!=\"Book\" order by auction_id desc;");
+                "select/*tdhs:[idx_user_auction(user_id)]*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 and auction_name!=\"Book\" order by auction_id desc;");
     }
 
     @Test(expected = TDHSSQLException.class)

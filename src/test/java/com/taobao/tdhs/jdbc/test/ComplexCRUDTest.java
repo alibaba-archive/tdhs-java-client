@@ -170,7 +170,7 @@ public class ComplexCRUDTest extends TestBase {
     @Test
     public void testSelect6() throws ClassNotFoundException, SQLException {
         String sql =
-                "select/*tdhs:idx_user_auction(user_id,auction_id)*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 order by auction_id;";
+                "select/*tdhs:[idx_user_auction(user_id,auction_id)]*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 order by auction_id;";
         List<String[]> mysqlRecord = executeSelect(getMySQLConnection(), sql);
         List<String[]> tdhsRecord = executeSelect(getTDHSConnection(), sql);
         compareRecord(mysqlRecord, tdhsRecord);
@@ -179,7 +179,7 @@ public class ComplexCRUDTest extends TestBase {
     @Test
     public void testSelect7() throws ClassNotFoundException, SQLException {
         String sql =
-                "select/*tdhs:idx_user_auction(user_id,auction_id)*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 order by auction_id desc;";
+                "select/*tdhs:[idx_user_auction(user_id,auction_id)]*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 order by auction_id desc;";
         List<String[]> mysqlRecord = executeSelect(getMySQLConnection(), sql);
         List<String[]> tdhsRecord = executeSelect(getTDHSConnection(), sql);
         compareRecord(mysqlRecord, tdhsRecord);
@@ -188,7 +188,7 @@ public class ComplexCRUDTest extends TestBase {
     @Test
     public void testSelect8() throws ClassNotFoundException, SQLException {
         String sql =
-                "select/*tdhs:idx_user_auction(user_id,auction_id)*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 and auction_name!=\"Book\" order by auction_id desc;";
+                "select/*tdhs:[idx_user_auction(user_id,auction_id)]*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where user_id =1 and auction_name!=\"Book\" order by auction_id desc;";
         List<String[]> mysqlRecord = executeSelect(getMySQLConnection(), sql);
         List<String[]> tdhsRecord = executeSelect(getTDHSConnection(), sql);
         compareRecord(mysqlRecord, tdhsRecord);

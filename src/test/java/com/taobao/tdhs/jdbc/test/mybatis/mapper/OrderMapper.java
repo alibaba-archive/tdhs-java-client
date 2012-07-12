@@ -60,19 +60,19 @@ public interface OrderMapper {
     List<OrderVO> selectTest2();
 
 
-    @Select("select/*tdhs:idx_user_auction(user_id,auction_id)*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where  user_id =1 order by auction_id")
+    @Select("select/*tdhs:[idx_user_auction(user_id,auction_id)]*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where  user_id =1 order by auction_id")
     @Results({@Result(column = "user_id", property = "userId"), @Result(column = "auction_id", property = "auctionId"),
             @Result(column = "auction_name", property = "auctionName"),
             @Result(column = "last_modify", property = "lastModify")})
     List<OrderVO> selectTest3();
 
-    @Select("select/*tdhs:idx_user_auction(user_id,auction_id)*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where  user_id =1 order by auction_id desc")
+    @Select("select/*tdhs:[idx_user_auction(user_id,auction_id)]*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where  user_id =1 order by auction_id desc")
     @Results({@Result(column = "user_id", property = "userId"), @Result(column = "auction_id", property = "auctionId"),
             @Result(column = "auction_name", property = "auctionName"),
             @Result(column = "last_modify", property = "lastModify")})
     List<OrderVO> selectTest4();
 
-    @Select("select/*tdhs:idx_user_auction(user_id,auction_id)*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where   user_id =1 and auction_name!=\"Book\" order by auction_id desc")
+    @Select("select/*tdhs:[idx_user_auction(user_id,auction_id)]*/ id,user_id,auction_id,auction_name,number,deleted,created,last_modify from orders where   user_id =1 and auction_name!=\"Book\" order by auction_id desc")
     @Results({@Result(column = "user_id", property = "userId"), @Result(column = "auction_id", property = "auctionId"),
             @Result(column = "auction_name", property = "auctionName"),
             @Result(column = "last_modify", property = "lastModify")})

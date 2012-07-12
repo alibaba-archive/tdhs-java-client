@@ -46,7 +46,7 @@ public class ParseSQLTest {
     @Test
     public void test1() {
         String sql =
-                "select/* tdhs:idx_ab(a, b)*/ a as a1,b from db.test where id = 1 and a in (1,2,\"3\")  and b is null order by a limit 1";
+                "select/* tdhs:[idx_ab(a, b)]*/ a as a1,b from db.test where id = 1 and a in (1,2,\"3\")  and b is null order by a limit 1";
         ParseSQL parseSQL = new ParseSQL(sql);
         parseSQL.sqlDispatch();
         print(parseSQL);
@@ -54,7 +54,7 @@ public class ParseSQLTest {
 
     @Test
     public void test2() {
-        String sql = "delete/* tdhs:idx_ab(a, b)*/ from db.test where id = 1 and status=2 order by id,status desc";
+        String sql = "delete/* tdhs:[idx_ab(a, b)]*/ from db.test where id = 1 and status=2 order by id,status desc";
         ParseSQL parseSQL = new ParseSQL(sql);
         parseSQL.sqlDispatch();
         print(parseSQL);
@@ -63,7 +63,7 @@ public class ParseSQLTest {
     @Test
     public void test3() {
         String sql =
-                "update/* tdhs:idx_ab(a, b)*/db.test set xxx='bbb' where id = 1 and status=2 and type=5 order by a asc";
+                "update/* tdhs:[idx_ab(a, b)]*/db.test set xxx='bbb' where id = 1 and status=2 and type=5 order by a asc";
         ParseSQL parseSQL = new ParseSQL(sql);
         parseSQL.sqlDispatch();
         print(parseSQL);
@@ -71,7 +71,7 @@ public class ParseSQLTest {
 
     @Test
     public void test4() {
-        String sql = "select/* tdhs:idx_ab(a, b)*/ a,b from db.test as t where t.id = 1 order by a";
+        String sql = "select/* tdhs:[idx_ab(a, b)]*/ a,b from db.test as t where t.id = 1 order by a";
         ParseSQL parseSQL = new ParseSQL(sql);
         parseSQL.sqlDispatch();
         print(parseSQL);
