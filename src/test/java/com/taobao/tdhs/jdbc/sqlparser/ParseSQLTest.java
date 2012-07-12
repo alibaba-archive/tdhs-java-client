@@ -31,8 +31,8 @@ public class ParseSQLTest {
         }
         if (ps.getSqlType() == SQLType.SELECT) {
             System.out.println(ps.getColumns());
-            System.out.println("start:"+ps.getLimitOffset());
-            System.out.println("limit:"+ps.getLimit());
+            System.out.println("start:" + ps.getLimitOffset());
+            System.out.println("limit:" + ps.getLimit());
 
 
         }
@@ -98,6 +98,16 @@ public class ParseSQLTest {
         String sql = "update table1 set a='=abc',b='danc\\'hen,=efk',ok=5 where id=4";
         ParseSQL parseSQL = new ParseSQL(sql);
         parseSQL.sqlDispatch();
+        System.out.println(parseSQL.getUpdateEntries());
+    }
+
+    @Test
+    public void testUpdate4() {
+        String sql =
+                "update /*tdhs:<2>*/notify_bytes_msg_normal_2 set committed='1' where message_id='1C1A1FD16A9323B0D9560BD9B6888790'";
+        ParseSQL parseSQL = new ParseSQL(sql);
+        parseSQL.sqlDispatch();
+        System.out.println(parseSQL.getHint());
         System.out.println(parseSQL.getUpdateEntries());
     }
 

@@ -66,7 +66,7 @@ public class HintStruct {
             String indexHint = hintString.substring(idx_left + 1, idx_right);
             k += (indexHint.length() + 2);
             int addr = indexHint.indexOf("(");
-            if (addr > 0 ) {
+            if (addr > 0) {
                 this.indexName = indexHint.substring(0, addr);
             } else {
                 errmsg = "hint syntax is not right.";
@@ -85,7 +85,7 @@ public class HintStruct {
 
         }
 
-        if (!hintString.substring(idx_right + 1).equals("*/")) {
+        if (!hintString.substring(k).equals("*/")) {
             errmsg = "hint syntax is not right.";
             return;
         }
@@ -113,10 +113,12 @@ public class HintStruct {
 
     @Override
     public String toString() {
-        return "HintStruct [hintString=" + hintString + ", indexName="
-                + indexName + ", listIndexColumns=" + listIndexColumns
-                + ", errmsg=" + errmsg + "]";
+        return "HintStruct{" +
+                "hintString='" + hintString + '\'' +
+                ", indexName='" + indexName + '\'' +
+                ", listIndexColumns=" + listIndexColumns +
+                ", errmsg='" + errmsg + '\'' +
+                ", hash=" + hash +
+                '}';
     }
-
-
 }
