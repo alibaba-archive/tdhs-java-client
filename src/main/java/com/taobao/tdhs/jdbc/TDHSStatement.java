@@ -128,7 +128,7 @@ public class TDHSStatement implements Statement {
         }
         List<OperationStruct> keys = new ArrayList<OperationStruct>(2);
         HintStruct hint = parseSQL.getHint();
-        if (hint != null && StringUtils.isBlank(hint.getErrmsg())) {
+        if (hint != null && StringUtils.isBlank(hint.getErrmsg()) && StringUtils.isNotBlank(hint.getIndexName())) {
             String index = hint.getIndexName();
             List<String> listIndexColumns = hint.getListIndexColumns();
             if (listIndexColumns == null || listIndexColumns.isEmpty()) {
