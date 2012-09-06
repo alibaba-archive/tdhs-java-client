@@ -31,6 +31,7 @@ public interface TDHSClient extends Statement {
     public static final String CHARSET_NAME = "charsetName";
     public static final String READ_CODE = "readCode";
     public static final String WRITE_CODE = "writeCode";
+    public static final String LOWER_CASE_TABLE_NAMES = "lowerCaseTableNames";
 
 
     /**
@@ -48,6 +49,20 @@ public interface TDHSClient extends Statement {
      * @param charsetName the charsetName of this TDHSClient object.
      */
     void setCharsetName(String charsetName);
+
+    /**
+     * Method isLowerCaseTableNames returns the lowerCaseTableNames of this TDHSClient object.
+     *
+     * @return the lowerCaseTableNames (type boolean) of this TDHSClient object.
+     */
+    boolean isLowerCaseTableNames();
+
+    /**
+     * Method setLowerCaseTableNames sets the lowerCaseTableNames of this TDHSClient object.
+     *
+     * @param lowerCaseTableNames the lowerCaseTableNames of this TDHSClient object.
+     */
+    void setLowerCaseTableNames(boolean lowerCaseTableNames);
 
 
     /**

@@ -36,8 +36,8 @@ public class TableInfo implements Request {
     }
 
     public TableInfo(String db, String table, String index, String[] fields) {
-        this._db = db == null ? null : db.toLowerCase();
-        this._table = table == null ? null : table.toLowerCase();
+        this._db = db;
+        this._table = table;
         this._index = index;
         if (fields != null) {
             Collections.addAll(this._fields, fields);
@@ -50,7 +50,7 @@ public class TableInfo implements Request {
     }
 
     public void setDb(String db) {
-        this._db = db == null ? null : db.toLowerCase();
+        this._db = db;
     }
 
     public String getTable() {
@@ -58,7 +58,7 @@ public class TableInfo implements Request {
     }
 
     public void setTable(String _table) {
-        this._table = _table == null ? null : _table.toLowerCase();
+        this._table = _table;
     }
 
     public String getIndex() {
@@ -75,6 +75,12 @@ public class TableInfo implements Request {
 
     public void setNeedField(boolean needField) {
         this.needField = needField;
+    }
+
+    public void tableNameToLowerCase() {
+        this._db = this._db != null ? this._db.toLowerCase() : null;
+        this._table = this._table != null ? this._table.toLowerCase() : null;
+
     }
 
 
@@ -94,7 +100,8 @@ public class TableInfo implements Request {
 
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "TableInfo{" +
                 "db='" + _db + '\'' +
                 ", table='" + _table + '\'' +

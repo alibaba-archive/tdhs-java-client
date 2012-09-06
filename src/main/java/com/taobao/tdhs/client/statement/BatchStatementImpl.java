@@ -48,8 +48,8 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
 
     public BatchStatementImpl(TDHSNet tdhsNet, AtomicLong id,
                               ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses, TDHSProtocol protocol,
-                              int timeOut, String charsetName) {
-        super(tdhsNet, id, responses, protocol, timeOut, charsetName);
+                              int timeOut, String charsetName, boolean lowerCaseTableNames) {
+        super(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames);
     }
 
     @Override

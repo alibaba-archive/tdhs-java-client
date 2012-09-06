@@ -55,6 +55,8 @@ public class TDHSClientImpl implements TDHSClient {
 
     private String charsetName;
 
+    private boolean lowerCaseTableNames;
+
 
     /**
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
@@ -71,7 +73,8 @@ public class TDHSClientImpl implements TDHSClient {
                 props.containsKey(CONNECT_TIMEOUT) ? (Integer) props.get(CONNECT_TIMEOUT) : 1000,
                 props.containsKey(CHARSET_NAME) ? (String) props.get(CHARSET_NAME) : null,
                 props.containsKey(READ_CODE) ? (String) props.get(READ_CODE) : null,
-                props.containsKey(WRITE_CODE) ? (String) props.get(WRITE_CODE) : null);
+                props.containsKey(WRITE_CODE) ? (String) props.get(WRITE_CODE) : null,
+                props.containsKey(LOWER_CASE_TABLE_NAMES) ? (Boolean) props.get(WRITE_CODE) : true);
     }
 
     /**
@@ -112,26 +115,27 @@ public class TDHSClientImpl implements TDHSClient {
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
                           int connectTimeOut) throws TDHSException {
-        this(address, connectionNumber, timeOut, needReconnect, connectTimeOut, null, null, null);
+        this(address, connectionNumber, timeOut, needReconnect, connectTimeOut, null, null, null, true);
     }
 
     /**
      * Constructor TDHSClientImpl creates a new TDHSClientImpl instance.
      *
-     * @param address          of type InetSocketAddress
-     * @param connectionNumber of type int
-     * @param timeOut          of type int
-     * @param needReconnect    of type boolean
-     * @param connectTimeOut   of type int
-     * @param charsetName      of type String
-     * @param readCode         of type String
-     * @param writeCode        of type String
+     * @param address             of type InetSocketAddress
+     * @param connectionNumber    of type int
+     * @param timeOut             of type int
+     * @param needReconnect       of type boolean
+     * @param connectTimeOut      of type int
+     * @param charsetName         of type String
+     * @param readCode            of type String
+     * @param writeCode           of type String
+     * @param lowerCaseTableNames of type boolean
      *
      * @throws TDHSException when
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
                           int connectTimeOut, @Nullable String charsetName, @Nullable String readCode,
-                          @Nullable String writeCode)
+                          @Nullable String writeCode, boolean lowerCaseTableNames)
             throws TDHSException {
 
         if (connectionNumber <= 0) {
@@ -141,6 +145,7 @@ public class TDHSClientImpl implements TDHSClient {
         protocol = TDHSCommon.PROTOCOL_FOR_BINARY;
         tdhsNet = new TDHSNetForNetty();
         this.charsetName = charsetName;
+        this.lowerCaseTableNames = lowerCaseTableNames;
         NetParameters parameters = new NetParameters();
         parameters.setAddress(address);
         parameters.setConnectionNumber(connectionNumber);
@@ -160,21 +165,31 @@ public class TDHSClientImpl implements TDHSClient {
     }
 
     /**
-     * Method getCharsetName returns the charsetName of this TDHSClientImpl object.
-     *
-     * @return the charsetName (type String) of this TDHSClientImpl object.
+     * @see TDHSClient#getCharsetName()
      */
     public String getCharsetName() {
         return charsetName;
     }
 
     /**
-     * Method setCharsetName sets the charsetName of this TDHSClientImpl object.
-     *
-     * @param charsetName the charsetName of this TDHSClientImpl object.
+     * @see TDHSClient#setCharsetName(String)
      */
     public void setCharsetName(String charsetName) {
         this.charsetName = charsetName;
+    }
+
+    /**
+     * @see TDHSClient#isLowerCaseTableNames()
+     */
+    public boolean isLowerCaseTableNames() {
+        return lowerCaseTableNames;
+    }
+
+    /**
+     * @see TDHSClient#setLowerCaseTableNames(boolean)
+     */
+    public void setLowerCaseTableNames(boolean lowerCaseTableNames) {
+        this.lowerCaseTableNames = lowerCaseTableNames;
     }
 
     /**
@@ -183,7 +198,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Statement
      */
     public Statement createStatement() {
-        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName);
+        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames);
     }
 
     /**
@@ -194,7 +209,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Statement
      */
     public Statement createStatement(int hash) {
-        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, hash);
+        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames, hash);
     }
 
     /**
@@ -203,7 +218,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return BatchStatement
      */
     public BatchStatement createBatchStatement() {
-        return new BatchStatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName);
+        return new BatchStatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames);
     }
 
     /**

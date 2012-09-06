@@ -55,9 +55,11 @@ public class StatementImpl implements Statement {
 
     private long hash = 0;
 
+    private boolean lowerCaseTableNames;
+
     public StatementImpl(TDHSNet tdhsNet, AtomicLong id,
                          ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses,
-                         TDHSProtocol protocol, int timeOut, String charsetName) {
+                         TDHSProtocol protocol, int timeOut, String charsetName, boolean lowerCaseTableNames) {
         this.tdhsNet = tdhsNet;
         this.id = id;
         this.responses = responses;
@@ -65,12 +67,14 @@ public class StatementImpl implements Statement {
         this.timeOut = timeOut;
         this.charsetName = charsetName;
         this.hash = 0;
+        this.lowerCaseTableNames = lowerCaseTableNames;
     }
 
 
     public StatementImpl(TDHSNet tdhsNet, AtomicLong id,
                          ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses,
-                         TDHSProtocol protocol, int timeOut, String charsetName, int hash) {
+                         TDHSProtocol protocol, int timeOut, String charsetName, boolean lowerCaseTableNames,
+                         int hash) {
         this.tdhsNet = tdhsNet;
         this.id = id;
         this.responses = responses;
@@ -78,6 +82,7 @@ public class StatementImpl implements Statement {
         this.timeOut = timeOut;
         this.charsetName = charsetName;
         this.hash = hash & 0xFFFFFFFFL;
+        this.lowerCaseTableNames = lowerCaseTableNames;
     }
 
     // just get one
@@ -100,6 +105,9 @@ public class StatementImpl implements Statement {
         if (get == null) {
             throw new IllegalArgumentException("get is null!");
         }
+        if (lowerCaseTableNames) {
+            get.getTableInfo().tableNameToLowerCase();
+        }
         return sendRequest(TDHSCommon.RequestType.GET, get, new TDHSMetaData(get.getTableInfo()));
     }
 
@@ -117,6 +125,9 @@ public class StatementImpl implements Statement {
         }
         if (get.getTableInfo() != null) {
             get.getTableInfo().setNeedField(false);
+        }
+        if (lowerCaseTableNames) {
+            get.getTableInfo().tableNameToLowerCase();
         }
         return sendRequest(TDHSCommon.RequestType.COUNT, get,
                 new TDHSMetaData(get.getTableInfo(), Arrays.asList("count(*)")));
@@ -138,6 +149,9 @@ public class StatementImpl implements Statement {
         if (get.getTableInfo() != null) {
             get.getTableInfo().setNeedField(false);
         }
+        if (lowerCaseTableNames) {
+            get.getTableInfo().tableNameToLowerCase();
+        }
         return sendRequest(TDHSCommon.RequestType.DELETE, get,
                 new TDHSMetaData(get.getTableInfo(), Arrays.asList("deleted", "changed")));
     }
@@ -157,6 +171,9 @@ public class StatementImpl implements Statement {
         if (update == null) {
             throw new IllegalArgumentException("update is null!");
         }
+        if (lowerCaseTableNames) {
+            update.getGet().getTableInfo().tableNameToLowerCase();
+        }
         return sendRequest(TDHSCommon.RequestType.UPDATE, update,
                 new TDHSMetaData(update.getGet().getTableInfo(), Arrays.asList("updated", "changed")));
     }
@@ -173,6 +190,9 @@ public class StatementImpl implements Statement {
     public TDHSResponse insert(@NotNull Insert insert) throws TDHSException {
         if (insert == null) {
             throw new IllegalArgumentException("insert is null!");
+        }
+        if (lowerCaseTableNames) {
+            insert.getTableInfo().tableNameToLowerCase();
         }
         return sendRequest(TDHSCommon.RequestType.INSERT, insert,
                 new TDHSMetaData(insert.getTableInfo(), Arrays.asList("lastid")));

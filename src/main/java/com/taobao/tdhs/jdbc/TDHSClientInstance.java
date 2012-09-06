@@ -84,6 +84,8 @@ public final class TDHSClientInstance {
         String readCode = info.getProperty(NonRegisteringDriver.READ_CODE_PROPERTY_KEY);
 
         String writeCode = info.getProperty(NonRegisteringDriver.WRITE_CODE_PROPERTY_KEY);
+        Boolean lowerCaseTableNames = Boolean.valueOf(info.getProperty(NonRegisteringDriver.LOWER_CASE_TABLE_NAMES
+                , "true"));
         ClientKey key = new ClientKey(new InetSocketAddress(host, port), connectionNumber, timeOut, needReconnect,
                 connectTimeOut, charsetName, readCode, writeCode);
         logger.debug("createConnection ClientKey:" + key);
@@ -97,7 +99,7 @@ public final class TDHSClientInstance {
             } else {
                 TDHSClient tdhsClient =
                         new TDHSClientImpl(key.getAddress(), connectionNumber, timeOut, needReconnect, connectTimeOut,
-                                charsetName, readCode, writeCode);
+                                charsetName, readCode, writeCode, lowerCaseTableNames);
                 value = new ClientValue(tdhsClient);
                 instances.put(key, value);
                 key.setClient(tdhsClient);

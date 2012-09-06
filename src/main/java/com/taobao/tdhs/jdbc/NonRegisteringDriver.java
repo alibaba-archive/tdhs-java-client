@@ -55,6 +55,8 @@ public class NonRegisteringDriver implements java.sql.Driver {
 
     public static final String CHARSET_NAME_PROPERTY_KEY = TDHSClient.CHARSET_NAME;
 
+    public static final String LOWER_CASE_TABLE_NAMES = TDHSClient.LOWER_CASE_TABLE_NAMES;
+
     public static final String FAKE_TRANSACTION = "fakeTransaction";
 
 
