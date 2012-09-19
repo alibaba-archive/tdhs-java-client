@@ -228,7 +228,12 @@ public final class ConvertUtil {
             return calendar.getTimeInMillis();
         }
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat dateFormat;
+        if (val.length() == "yyyy-MM-dd".length()) {
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        } else {
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
         if (cal != null) {
             TimeZone timeZone = cal.getTimeZone();
             dateFormat.setTimeZone(timeZone);
