@@ -124,7 +124,7 @@ public class TDHSResultSet implements ResultSet {
      *
      * @throws SQLException when
      */
-    private void checkRow(int columnIndex) throws SQLException {
+    protected void checkRow(int columnIndex) throws SQLException {
         if (currentRow == null) {
             throw new SQLException("can't find current row");
         }
@@ -140,7 +140,7 @@ public class TDHSResultSet implements ResultSet {
      *
      * @throws SQLException when
      */
-    private void checkType(int columnIndex) throws SQLException {
+    protected void checkType(int columnIndex) throws SQLException {
         if (columnIndex <= 0 || columnIndex > fieldTypes.size()) {
             throw new SQLException("Invaild column:" + columnIndex);
         }
@@ -620,6 +620,15 @@ public class TDHSResultSet implements ResultSet {
      */
     public ResultSetMetaData getMetaData() throws SQLException {
         return new TDHSResultSetMetaData(fieldTypes, alias, metaData);
+    }
+
+    /**
+     * Method getFieldTypes returns the fieldTypes of this TDHSResultSet object.
+     *
+     * @return the fieldTypes (type List<IFieldType>) of this TDHSResultSet object.
+     */
+    protected List<TDHSResponseEnum.IFieldType> getFieldTypes() {
+        return fieldTypes;
     }
 
     /**

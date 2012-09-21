@@ -17,8 +17,10 @@ import com.taobao.tdhs.client.easy.Insert;
 import com.taobao.tdhs.client.easy.Query;
 import com.taobao.tdhs.client.easy.Where;
 import com.taobao.tdhs.client.exception.TDHSException;
+import com.taobao.tdhs.client.response.TDHSMySQLResultSetWrap;
 import com.taobao.tdhs.client.response.TDHSResponse;
 import com.taobao.tdhs.client.response.TDHSResponseEnum;
+import com.taobao.tdhs.client.response.TDHSResultSet;
 import com.taobao.tdhs.client.statement.BatchStatement;
 import com.taobao.tdhs.jdbc.exception.TDHSSQLException;
 import com.taobao.tdhs.jdbc.sqlparser.*;
@@ -453,11 +455,13 @@ public class TDHSStatement implements Statement {
                             "return error [" + response.getErrorCode() + "]");
                 }
             } else {
+                TDHSResultSet resultSet;
                 if (alias != null) {
-                    currentResultSet = response.getResultSet(Arrays.asList(alias));
+                    resultSet = (TDHSResultSet) response.getResultSet(Arrays.asList(alias));
                 } else {
-                    currentResultSet = response.getResultSet();
+                    resultSet = (TDHSResultSet) response.getResultSet();
                 }
+                currentResultSet = resultSet != null ? new TDHSMySQLResultSetWrap(resultSet) : null;
                 if (isModify) {
                     updateCount = isInsert ? 1 : ConvertUtil.safeConvertInt(response.getFieldData().get(0).get(0), -1);
                 } else {

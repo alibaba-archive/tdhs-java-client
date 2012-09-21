@@ -17,6 +17,7 @@ import com.taobao.tdhs.client.exception.TDHSException;
 import com.taobao.tdhs.client.util.ByteOrderUtil;
 import com.taobao.tdhs.client.util.ConvertUtil;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -301,7 +302,9 @@ public class TDHSResponse {
      *
      * @throws TDHSException when
      */
-    public ResultSet getResultSet() throws TDHSException {
+    public
+    @Nullable
+    ResultSet getResultSet() throws TDHSException {
         if (TDHSResponseEnum.ClientStatus.OK.equals(status)) {
             return new TDHSResultSet(getFieldNames(), metaData, getFieldTypes(), getFieldOriData(), charsetName);
         }
@@ -317,7 +320,9 @@ public class TDHSResponse {
      *
      * @throws TDHSException when
      */
-    public ResultSet getResultSet(List<String> alias) throws TDHSException {
+    public
+    @Nullable
+    ResultSet getResultSet(List<String> alias) throws TDHSException {
         if (TDHSResponseEnum.ClientStatus.OK.equals(status)) {
             if (alias == null || alias.size() != getFieldNames().size()) {
                 throw new TDHSException("alias is wrong! alias:[" + alias + "] fieldNames:[" + getFieldNames() + "]");
