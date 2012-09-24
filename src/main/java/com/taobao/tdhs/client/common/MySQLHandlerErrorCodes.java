@@ -99,7 +99,7 @@ public enum MySQLHandlerErrorCodes implements IMySQLHandlerErrorCodes {
             return cached_code[code];
         }
         for (MySQLHandlerErrorCodes t : MySQLHandlerErrorCodes.values()) {
-            cached_code[code] = t;
+            cached_code[t.getCode()] = t;
             if (code == t.getCode()) {
                 return t;
             }

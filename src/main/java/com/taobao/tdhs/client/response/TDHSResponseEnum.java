@@ -319,7 +319,7 @@ public class TDHSResponseEnum {
                 return cached_type[type];
             }
             for (FieldType t : FieldType.values()) {
-                cached_type[type] = t;
+                cached_type[t.getType()] = t;
                 if (type == t.getType()) {
                     return t;
                 }
