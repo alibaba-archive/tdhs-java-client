@@ -1,3 +1,8 @@
+0.3.2.5(2012-09-24)
+---------------------------
+* Fix bug for enum cache
+* add TDHSMySQLResultSetWrap for MySQL ResultSet compatible.
+
 0.3.2.3(2012-07-12)
 ---------------------------
 * JDBC hint support custom hash
