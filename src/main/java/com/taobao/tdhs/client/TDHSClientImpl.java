@@ -19,7 +19,6 @@ import com.taobao.tdhs.client.net.NetParameters;
 import com.taobao.tdhs.client.net.TDHSNet;
 import com.taobao.tdhs.client.net.netty.TDHSNetForNetty;
 import com.taobao.tdhs.client.packet.BasePacket;
-import com.taobao.tdhs.client.protocol.TDHSProtocol;
 import com.taobao.tdhs.client.request.*;
 import com.taobao.tdhs.client.response.TDHSResponse;
 import com.taobao.tdhs.client.statement.BatchStatement;
@@ -49,7 +48,7 @@ public class TDHSClientImpl implements TDHSClient {
     private static final ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses =
             new ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>>();
 
-    private final TDHSProtocol protocol;
+    private final TDHSCommon.ProtocolVersion version;
 
     private final int timeOut; //ms
 
@@ -74,7 +73,9 @@ public class TDHSClientImpl implements TDHSClient {
                 props.containsKey(CHARSET_NAME) ? (String) props.get(CHARSET_NAME) : null,
                 props.containsKey(READ_CODE) ? (String) props.get(READ_CODE) : null,
                 props.containsKey(WRITE_CODE) ? (String) props.get(WRITE_CODE) : null,
-                props.containsKey(LOWER_CASE_TABLE_NAMES) ? (Boolean) props.get(WRITE_CODE) : true);
+                props.containsKey(LOWER_CASE_TABLE_NAMES) ? (Boolean) props.get(WRITE_CODE) : true,
+                props.containsKey(VERSION) ? TDHSCommon.ProtocolVersion.fromProp((String) props.get(VERSION)) :
+                        TDHSCommon.ProtocolVersion.V1);
     }
 
     /**
@@ -115,7 +116,8 @@ public class TDHSClientImpl implements TDHSClient {
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
                           int connectTimeOut) throws TDHSException {
-        this(address, connectionNumber, timeOut, needReconnect, connectTimeOut, null, null, null, true);
+        this(address, connectionNumber, timeOut, needReconnect, connectTimeOut, null, null, null, true,
+                TDHSCommon.ProtocolVersion.V1);
     }
 
     /**
@@ -135,22 +137,23 @@ public class TDHSClientImpl implements TDHSClient {
      */
     public TDHSClientImpl(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
                           int connectTimeOut, @Nullable String charsetName, @Nullable String readCode,
-                          @Nullable String writeCode, boolean lowerCaseTableNames)
+                          @Nullable String writeCode, boolean lowerCaseTableNames, TDHSCommon.ProtocolVersion version)
             throws TDHSException {
 
         if (connectionNumber <= 0) {
             throw new IllegalArgumentException("connectionNumber must be positive!");
         }
         this.timeOut = timeOut;
-        protocol = TDHSCommon.PROTOCOL_FOR_BINARY;
-        tdhsNet = new TDHSNetForNetty();
+        this.version = version;
+        this.tdhsNet = new TDHSNetForNetty();
         this.charsetName = charsetName;
         this.lowerCaseTableNames = lowerCaseTableNames;
         NetParameters parameters = new NetParameters();
         parameters.setAddress(address);
         parameters.setConnectionNumber(connectionNumber);
         parameters.setNeedReconnect(needReconnect);
-        tdhsNet.initNet(parameters, protocol.shakeHandPacket(this.timeOut, readCode, writeCode), responses);
+        tdhsNet.initNet(parameters, this.version.getTdhsProtocol().shakeHandPacket(this.timeOut, readCode, writeCode),
+                responses);
         if (connectTimeOut > 0 && !awaitForConnected(connectTimeOut, TimeUnit.MILLISECONDS)) {
             throw new TDHSTimeoutException("connect time out");
         }
@@ -198,7 +201,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Statement
      */
     public Statement createStatement() {
-        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames);
+        return new StatementImpl(tdhsNet, id, responses, version, timeOut, charsetName, lowerCaseTableNames);
     }
 
     /**
@@ -209,7 +212,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return Statement
      */
     public Statement createStatement(int hash) {
-        return new StatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames, hash);
+        return new StatementImpl(tdhsNet, id, responses, version, timeOut, charsetName, lowerCaseTableNames, hash);
     }
 
     /**
@@ -218,7 +221,7 @@ public class TDHSClientImpl implements TDHSClient {
      * @return BatchStatement
      */
     public BatchStatement createBatchStatement() {
-        return new BatchStatementImpl(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames);
+        return new BatchStatementImpl(tdhsNet, id, responses, version, timeOut, charsetName, lowerCaseTableNames);
     }
 
     /**

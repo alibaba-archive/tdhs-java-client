@@ -19,7 +19,6 @@ import com.taobao.tdhs.client.exception.TDHSException;
 import com.taobao.tdhs.client.exception.TDHSTimeoutException;
 import com.taobao.tdhs.client.net.TDHSNet;
 import com.taobao.tdhs.client.packet.BasePacket;
-import com.taobao.tdhs.client.protocol.TDHSProtocol;
 import com.taobao.tdhs.client.request.*;
 import com.taobao.tdhs.client.response.TDHSMetaData;
 import com.taobao.tdhs.client.response.TDHSResponse;
@@ -47,7 +46,7 @@ public class StatementImpl implements Statement {
 
     protected final ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses;
 
-    protected final TDHSProtocol protocol;
+    protected final TDHSCommon.ProtocolVersion version;
 
     protected final int timeOut; //ms
 
@@ -59,11 +58,12 @@ public class StatementImpl implements Statement {
 
     public StatementImpl(TDHSNet tdhsNet, AtomicLong id,
                          ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses,
-                         TDHSProtocol protocol, int timeOut, String charsetName, boolean lowerCaseTableNames) {
+                         TDHSCommon.ProtocolVersion version, int timeOut, String charsetName,
+                         boolean lowerCaseTableNames) {
         this.tdhsNet = tdhsNet;
         this.id = id;
         this.responses = responses;
-        this.protocol = protocol;
+        this.version = version;
         this.timeOut = timeOut;
         this.charsetName = charsetName;
         this.hash = 0;
@@ -73,12 +73,13 @@ public class StatementImpl implements Statement {
 
     public StatementImpl(TDHSNet tdhsNet, AtomicLong id,
                          ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses,
-                         TDHSProtocol protocol, int timeOut, String charsetName, boolean lowerCaseTableNames,
+                         TDHSCommon.ProtocolVersion version, int timeOut, String charsetName,
+                         boolean lowerCaseTableNames,
                          int hash) {
         this.tdhsNet = tdhsNet;
         this.id = id;
         this.responses = responses;
-        this.protocol = protocol;
+        this.version = version;
         this.timeOut = timeOut;
         this.charsetName = charsetName;
         this.hash = hash & 0xFFFFFFFFL;
@@ -215,7 +216,7 @@ public class StatementImpl implements Statement {
             //use default charsetName
             request.setCharsetName(this.charsetName);
         }
-        byte data[] = protocol.encode(request);
+        byte data[] = version.getTdhsProtocol().encode(request);
         BasePacket packet = new BasePacket(type, id.getAndIncrement(), hash, data);
         ArrayBlockingQueue<BasePacket> queue = new ArrayBlockingQueue<BasePacket>(1);
         long seqId = packet.getSeqId();

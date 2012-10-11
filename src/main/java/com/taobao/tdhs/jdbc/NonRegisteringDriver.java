@@ -57,6 +57,8 @@ public class NonRegisteringDriver implements java.sql.Driver {
 
     public static final String LOWER_CASE_TABLE_NAMES = TDHSClient.LOWER_CASE_TABLE_NAMES;
 
+    public static final String VERSION = TDHSClient.VERSION;
+
     public static final String FAKE_TRANSACTION = "fakeTransaction";
 
 

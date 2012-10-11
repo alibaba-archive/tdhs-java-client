@@ -13,6 +13,7 @@ package com.taobao.tdhs.client.common;
 
 import com.taobao.tdhs.client.protocol.TDHSProtocol;
 import com.taobao.tdhs.client.protocol.TDHSProtocolBinary;
+import com.taobao.tdhs.client.protocol.TDHSProtocolBinaryV2;
 
 /**
  * @author <a href="mailto:wentong@taobao.com">文通</a>
@@ -24,7 +25,39 @@ public final class TDHSCommon {
 
     public static final int REQUEST_MAX_KEY_NUM = 10;
 
-    public static final TDHSProtocol PROTOCOL_FOR_BINARY = new TDHSProtocolBinary();
+
+    public enum ProtocolVersion {
+        V1(new TDHSProtocolBinary()), V2(new TDHSProtocolBinaryV2());
+        /**
+         * Enum ProtocolVersion ...
+         *
+         * @author zephyrleaves
+         * Created on 12-10-11
+         */
+        private TDHSProtocol tdhsProtocol;
+
+        private ProtocolVersion(TDHSProtocol tdhsProtocol) {
+            this.tdhsProtocol = tdhsProtocol;
+        }
+
+        public TDHSProtocol getTdhsProtocol() {
+            return tdhsProtocol;
+        }
+
+        /**
+         * Method fromProp ...
+         *
+         * @param prop of type String
+         *
+         * @return ProtocolVersion
+         */
+        public static ProtocolVersion fromProp(String prop) {
+            if (prop.equals("2") || prop.equalsIgnoreCase("v2")) {
+                return V2;
+            }
+            return V1;
+        }
+    }
 
     public enum RequestType {
         GET(0), COUNT(1), UPDATE(10), DELETE(11), INSERT(12), BATCH(20), SHAKE_HAND(0xFFFF);

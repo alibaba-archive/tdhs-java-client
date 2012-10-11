@@ -17,7 +17,6 @@ import com.taobao.tdhs.client.exception.TDHSException;
 import com.taobao.tdhs.client.exception.TDHSTimeoutException;
 import com.taobao.tdhs.client.net.TDHSNet;
 import com.taobao.tdhs.client.packet.BasePacket;
-import com.taobao.tdhs.client.protocol.TDHSProtocol;
 import com.taobao.tdhs.client.request.Get;
 import com.taobao.tdhs.client.request.RequestWithCharest;
 import com.taobao.tdhs.client.response.TDHSMetaData;
@@ -47,9 +46,10 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
 
 
     public BatchStatementImpl(TDHSNet tdhsNet, AtomicLong id,
-                              ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses, TDHSProtocol protocol,
+                              ConcurrentHashMap<Long, ArrayBlockingQueue<BasePacket>> responses,
+                              TDHSCommon.ProtocolVersion version,
                               int timeOut, String charsetName, boolean lowerCaseTableNames) {
-        super(tdhsNet, id, responses, protocol, timeOut, charsetName, lowerCaseTableNames);
+        super(tdhsNet, id, responses, version, timeOut, charsetName, lowerCaseTableNames);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
             //use default charsetName
             request.setCharsetName(this.charsetName);
         }
-        byte data[] = protocol.encode(request);
+        byte data[] = version.getTdhsProtocol().encode(request);
         BasePacket packet = new BasePacket(type, id.getAndIncrement(), data);
         batchRequest.add(new internal_struct(packet, metaData, request.getCharsetName()));
         return null;

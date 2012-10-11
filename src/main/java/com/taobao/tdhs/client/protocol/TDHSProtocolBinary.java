@@ -66,7 +66,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         }
     }
 
-    private static void encodeRequest(Request o, ByteArrayOutputStream out, String charsetName)
+    protected static void encodeRequest(Request o, ByteArrayOutputStream out, String charsetName)
             throws IllegalAccessException, IOException, TDHSEncodeException {
         for (Field f : o.getClass().getDeclaredFields()) {
             if (!Modifier.isPublic(f.getModifiers())) {
@@ -81,7 +81,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         }
     }
 
-    private static void writeObjectToStream(Object o, ByteArrayOutputStream out, String fieldName, String charsetName)
+    protected static void writeObjectToStream(Object o, ByteArrayOutputStream out, String fieldName, String charsetName)
             throws IOException,
             TDHSEncodeException, IllegalAccessException {
         if (o == null || o instanceof String) {
@@ -104,7 +104,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
     }
 
 
-    private static void writeToStream(String v, ByteArrayOutputStream out, @Nullable String charsetName)
+    protected static void writeToStream(String v, ByteArrayOutputStream out, @Nullable String charsetName)
             throws IOException {
         if (v == null) {
             writeInt32ToStream(0, out);
@@ -117,7 +117,7 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         }
     }
 
-    private static void writeToStream(byte[] v, ByteArrayOutputStream out)
+    protected static void writeToStream(byte[] v, ByteArrayOutputStream out)
             throws IOException {
         if (v == null) {
             writeInt32ToStream(0, out);
@@ -129,7 +129,8 @@ public class TDHSProtocolBinary implements TDHSProtocol {
     }
 
 
-    private static void writeToStream(Object[] array, ByteArrayOutputStream out, String charsetName) throws IOException,
+    protected static void writeToStream(Object[] array, ByteArrayOutputStream out, String charsetName)
+            throws IOException,
             TDHSEncodeException, IllegalAccessException {
         writeInt32ToStream(array.length, out);
         for (Object o : array) {
@@ -153,13 +154,13 @@ public class TDHSProtocolBinary implements TDHSProtocol {
     }
 
 
-    private static void writeInt32ToStream(int v, ByteArrayOutputStream out) {
+    protected static void writeInt32ToStream(int v, ByteArrayOutputStream out) {
         for (int i = 3; i >= 0; i--) {
             out.write((byte) ((v >>> (8 * i)) & 0XFF));
         }
     }
 
-    private static void writeInt8ToStream(int v, ByteArrayOutputStream out) {
+    protected static void writeInt8ToStream(int v, ByteArrayOutputStream out) {
         out.write((byte) (v & 0XFF));
     }
 }

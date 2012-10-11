@@ -13,6 +13,7 @@ package com.taobao.tdhs.jdbc;
 
 import com.taobao.tdhs.client.TDHSClient;
 import com.taobao.tdhs.client.TDHSClientImpl;
+import com.taobao.tdhs.client.common.TDHSCommon;
 import com.taobao.tdhs.client.exception.TDHSException;
 import com.taobao.tdhs.jdbc.util.ConvertUtil;
 import org.jetbrains.annotations.NotNull;
@@ -86,8 +87,10 @@ public final class TDHSClientInstance {
         String writeCode = info.getProperty(NonRegisteringDriver.WRITE_CODE_PROPERTY_KEY);
         Boolean lowerCaseTableNames = Boolean.valueOf(info.getProperty(NonRegisteringDriver.LOWER_CASE_TABLE_NAMES
                 , "true"));
+        TDHSCommon.ProtocolVersion version = TDHSCommon.ProtocolVersion.fromProp(info.getProperty
+                (NonRegisteringDriver.VERSION));
         ClientKey key = new ClientKey(new InetSocketAddress(host, port), connectionNumber, timeOut, needReconnect,
-                connectTimeOut, charsetName, readCode, writeCode);
+                connectTimeOut, charsetName, readCode, writeCode, version);
         logger.debug("createConnection ClientKey:" + key);
         lock.lock();
         try {
@@ -99,7 +102,7 @@ public final class TDHSClientInstance {
             } else {
                 TDHSClient tdhsClient =
                         new TDHSClientImpl(key.getAddress(), connectionNumber, timeOut, needReconnect, connectTimeOut,
-                                charsetName, readCode, writeCode, lowerCaseTableNames);
+                                charsetName, readCode, writeCode, lowerCaseTableNames, version);
                 value = new ClientValue(tdhsClient);
                 instances.put(key, value);
                 key.setClient(tdhsClient);
@@ -170,11 +173,13 @@ public final class TDHSClientInstance {
         private String charsetName;
         private String readCode;
         private String writeCode;
+        private TDHSCommon.ProtocolVersion version;
 
         private TDHSClient client;
 
         private ClientKey(InetSocketAddress address, int connectionNumber, int timeOut, boolean needReconnect,
-                          int connectTimeOut, String charsetName, String readCode, String writeCode) {
+                          int connectTimeOut, String charsetName, String readCode, String writeCode,
+                          TDHSCommon.ProtocolVersion version) {
             this.address = address;
             this.connectionNumber = connectionNumber;
             this.timeOut = timeOut;
@@ -183,6 +188,7 @@ public final class TDHSClientInstance {
             this.charsetName = charsetName;
             this.readCode = readCode;
             this.writeCode = writeCode;
+            this.version = version;
         }
 
         public TDHSClient getClient() {
@@ -225,6 +231,10 @@ public final class TDHSClientInstance {
             return writeCode;
         }
 
+        public TDHSCommon.ProtocolVersion getVersion() {
+            return version;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -241,6 +251,7 @@ public final class TDHSClientInstance {
                 return false;
             if (readCode != null ? !readCode.equals(clientKey.readCode) : clientKey.readCode != null) return false;
             if (writeCode != null ? !writeCode.equals(clientKey.writeCode) : clientKey.writeCode != null) return false;
+            if (version != null ? !version.equals(clientKey.version) : clientKey.version != null) return false;
 
             return true;
         }
@@ -255,6 +266,7 @@ public final class TDHSClientInstance {
             result = 31 * result + (charsetName != null ? charsetName.hashCode() : 0);
             result = 31 * result + (readCode != null ? readCode.hashCode() : 0);
             result = 31 * result + (writeCode != null ? writeCode.hashCode() : 0);
+            result = 31 * result + (version != null ? version.hashCode() : 0);
             return result;
         }
 
@@ -269,6 +281,7 @@ public final class TDHSClientInstance {
                     ", charsetName='" + charsetName + '\'' +
                     ", readCode='" + readCode + '\'' +
                     ", writeCode='" + writeCode + '\'' +
+                    ", version='" + version + '\'' +
                     '}';
         }
     }
