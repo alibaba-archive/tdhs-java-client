@@ -32,7 +32,7 @@ public interface TDHSClient extends Statement {
     public static final String READ_CODE = "readCode";
     public static final String WRITE_CODE = "writeCode";
     public static final String LOWER_CASE_TABLE_NAMES = "lowerCaseTableNames";
-    public static final String VERSION = "1";
+    public static final String VERSION = "version";
 
 
     /**
