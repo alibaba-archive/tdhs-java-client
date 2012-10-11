@@ -44,4 +44,9 @@ public class TDHSProtocolBinaryV2 extends TDHSProtocolBinary {
             return null;
         }
     }
+
+    @Override
+    public TDHSCommon.ProtocolVersion getProtocolVersion() {
+        return TDHSCommon.ProtocolVersion.V2;
+    }
 }

@@ -23,7 +23,7 @@ import java.util.List;
  * @author <a href="mailto:wentong@taobao.com">文通</a>
  * @since 11-11-1 下午4:10
  */
-public class Get extends RequestWithCharest implements Request {
+public class Get extends RequestWithCharset implements Request {
     private TableInfo tableInfo;
     private List<String[]> _key = new ArrayList<String[]>();
     private int ____find_flag = TDHSCommon.FindFlag.TDHS_EQ.getValue();
@@ -123,17 +123,18 @@ public class Get extends RequestWithCharest implements Request {
         filters.addFilter(field, flag, value);
     }
 
-    public void isVaild() throws TDHSEncodeException {
+    public void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException {
         if (tableInfo == null) {
             throw new TDHSEncodeException("tableInfo can't be empty!");
         }
-        tableInfo.isVaild();
+        tableInfo.isValid(version);
         if (_key == null || _key.size() == 0) {
             throw new TDHSEncodeException("key can't be missing!");
         }
-
-        if (_key.size() > TDHSCommon.REQUEST_MAX_KEY_NUM) {
-            throw new TDHSEncodeException("too many keys(in) ,larger than 10!");
+        if (version.equals(TDHSCommon.ProtocolVersion.V1)) {
+            if (_key.size() > TDHSCommon.REQUEST_MAX_KEY_NUM) {
+                throw new TDHSEncodeException("too many keys(in) ,larger than 10!");
+            }
         }
 
         for (String[] k : _key) {
@@ -145,13 +146,14 @@ public class Get extends RequestWithCharest implements Request {
             }
         }
         if (filters != null) {
-            filters.isVaild();
+            filters.isValid(version);
         }
 
     }
 
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Get{" +
                 "tableInfo=" + tableInfo +
                 ",key=" + _key +

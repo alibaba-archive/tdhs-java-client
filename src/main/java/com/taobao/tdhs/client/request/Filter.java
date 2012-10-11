@@ -33,7 +33,7 @@ public class Filter implements Request {
         this._value = value;
     }
 
-    public void isVaild() throws TDHSEncodeException {
+    public void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException {
         //nothing
     }
 

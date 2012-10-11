@@ -46,11 +46,11 @@ public class ValueEntry implements Request {
     }
 
     /**
-     * Method isVaild ...
+     * Method isValid ...
      *
      * @throws TDHSEncodeException when
      */
-    public void isVaild() throws TDHSEncodeException {
+    public void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException {
     }
 
     /**

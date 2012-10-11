@@ -11,6 +11,7 @@
 
 package com.taobao.tdhs.client.request;
 
+import com.taobao.tdhs.client.common.TDHSCommon;
 import com.taobao.tdhs.client.exception.TDHSEncodeException;
 
 /**
@@ -20,9 +21,11 @@ import com.taobao.tdhs.client.exception.TDHSEncodeException;
 public interface Request {
 
     /**
-     * isVaild for encoding
+     * Method isValid ...
+     *
+     * @param version of type ProtocolVersion
      *
      * @throws TDHSEncodeException when
      */
-    void isVaild() throws TDHSEncodeException;
+    void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException;
 }

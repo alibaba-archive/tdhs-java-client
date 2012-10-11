@@ -21,7 +21,7 @@ import java.util.List;
  * @author <a href="mailto:wentong@taobao.com">文通</a>
  * @since 11-12-19 下午5:45
  */
-public class Insert extends RequestWithCharest implements Request {
+public class Insert extends RequestWithCharset implements Request {
     private TableInfo tableInfo;
 
     private List<ValueEntry> _values = new ArrayList<ValueEntry>();
@@ -72,11 +72,11 @@ public class Insert extends RequestWithCharest implements Request {
         return tableInfo;
     }
 
-    public void isVaild() throws TDHSEncodeException {
+    public void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException {
         if (tableInfo == null) {
             throw new TDHSEncodeException("tableInfo can't be empty!");
         }
-        tableInfo.isVaild();
+        tableInfo.isValid(version);
         if (_values.size() != tableInfo.getFields().size()) {
             throw new TDHSEncodeException("field's size not match values's size");
         }

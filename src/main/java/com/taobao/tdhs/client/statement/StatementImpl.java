@@ -207,7 +207,7 @@ public class StatementImpl implements Statement {
         return new InsertImpl(this);
     }
 
-    protected TDHSResponse sendRequest(TDHSCommon.RequestType type, RequestWithCharest request, TDHSMetaData metaData)
+    protected TDHSResponse sendRequest(TDHSCommon.RequestType type, RequestWithCharset request, TDHSMetaData metaData)
             throws TDHSException {
         if (request == null) {
             throw new IllegalArgumentException("request can't be NULL!");

@@ -11,9 +11,10 @@
 
 package com.taobao.tdhs.client.protocol;
 
+import com.taobao.tdhs.client.common.TDHSCommon;
 import com.taobao.tdhs.client.exception.TDHSEncodeException;
 import com.taobao.tdhs.client.packet.BasePacket;
-import com.taobao.tdhs.client.request.RequestWithCharest;
+import com.taobao.tdhs.client.request.RequestWithCharset;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,5 +42,13 @@ public interface TDHSProtocol {
      * @throws com.taobao.tdhs.client.exception.TDHSEncodeException
      *
      */
-    byte[] encode(RequestWithCharest o) throws TDHSEncodeException;
+    byte[] encode(RequestWithCharset o) throws TDHSEncodeException;
+
+
+    /**
+     * Method getProtocolVersion returns the protocolVersion of this TDHSProtocol object.
+     *
+     * @return the protocolVersion (type ProtocolVersion) of this TDHSProtocol object.
+     */
+    TDHSCommon.ProtocolVersion getProtocolVersion();
 }

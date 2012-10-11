@@ -15,7 +15,7 @@ import com.taobao.tdhs.client.common.TDHSCommon;
 import com.taobao.tdhs.client.exception.TDHSEncodeException;
 import com.taobao.tdhs.client.packet.BasePacket;
 import com.taobao.tdhs.client.request.Request;
-import com.taobao.tdhs.client.request.RequestWithCharest;
+import com.taobao.tdhs.client.request.RequestWithCharset;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -53,9 +53,9 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         }
     }
 
-    public byte[] encode(RequestWithCharest o) throws TDHSEncodeException {
+    public byte[] encode(RequestWithCharset o) throws TDHSEncodeException {
         try {
-            o.isVaild();
+            o.isValid(getProtocolVersion());
             ByteArrayOutputStream out = new ByteArrayOutputStream(2 * 1024);
             encodeRequest(o, out, o.getCharsetName());
             return out.toByteArray();
@@ -64,6 +64,10 @@ public class TDHSProtocolBinary implements TDHSProtocol {
         } catch (IOException e) {
             throw new TDHSEncodeException(e);
         }
+    }
+
+    public TDHSCommon.ProtocolVersion getProtocolVersion() {
+        return TDHSCommon.ProtocolVersion.V1;
     }
 
     protected static void encodeRequest(Request o, ByteArrayOutputStream out, String charsetName)

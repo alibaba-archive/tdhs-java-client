@@ -18,7 +18,7 @@ import com.taobao.tdhs.client.exception.TDHSTimeoutException;
 import com.taobao.tdhs.client.net.TDHSNet;
 import com.taobao.tdhs.client.packet.BasePacket;
 import com.taobao.tdhs.client.request.Get;
-import com.taobao.tdhs.client.request.RequestWithCharest;
+import com.taobao.tdhs.client.request.RequestWithCharset;
 import com.taobao.tdhs.client.response.TDHSMetaData;
 import com.taobao.tdhs.client.response.TDHSResponse;
 import com.taobao.tdhs.client.response.TDHSResponseEnum;
@@ -139,7 +139,7 @@ public class BatchStatementImpl extends StatementImpl implements BatchStatement 
     }
 
     @Override
-    protected TDHSResponse sendRequest(TDHSCommon.RequestType type, RequestWithCharest request, TDHSMetaData metaData)
+    protected TDHSResponse sendRequest(TDHSCommon.RequestType type, RequestWithCharset request, TDHSMetaData metaData)
             throws TDHSException {
         if (request == null) {
             throw new IllegalArgumentException("request can't be NULL!");

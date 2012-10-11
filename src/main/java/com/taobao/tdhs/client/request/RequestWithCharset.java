@@ -15,7 +15,7 @@ package com.taobao.tdhs.client.request;
  * @author <a href="mailto:wentong@taobao.com">文通</a>
  * @since 12-1-17 下午1:04
  */
-public abstract class RequestWithCharest implements Request {
+public abstract class RequestWithCharset implements Request {
 
     private String charsetName;
 

@@ -34,7 +34,7 @@ public class Filters implements Request {
     }
 
 
-    public void isVaild() throws TDHSEncodeException {
+    public void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException {
         if (_filter != null && _filter.size() > TDHSCommon.REQUEST_MAX_FIELD_NUM) {
             throw new TDHSEncodeException("too many filter , larger than 256!");
         }

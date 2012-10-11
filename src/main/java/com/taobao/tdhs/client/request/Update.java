@@ -21,7 +21,7 @@ import java.util.List;
  * @author <a href="mailto:wentong@taobao.com">文通</a>
  * @since 11-12-14 下午4:28
  */
-public class Update extends RequestWithCharest implements Request {
+public class Update extends RequestWithCharset implements Request {
 
     private Get get;
 
@@ -57,11 +57,11 @@ public class Update extends RequestWithCharest implements Request {
         return get;
     }
 
-    public void isVaild() throws TDHSEncodeException {
+    public void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException {
         if (get == null) {
             throw new TDHSEncodeException("get can't be empty!");
         }
-        get.isVaild();
+        get.isValid(version);
         if (_valueEntries.size() != get.getTableInfo().getFields().size()) {
             throw new TDHSEncodeException("field's size not match updateEntries's size");
         }

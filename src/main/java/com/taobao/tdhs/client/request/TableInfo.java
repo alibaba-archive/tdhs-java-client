@@ -84,7 +84,7 @@ public class TableInfo implements Request {
     }
 
 
-    public void isVaild() throws TDHSEncodeException {
+    public void isValid(TDHSCommon.ProtocolVersion version) throws TDHSEncodeException {
         if (StringUtils.isBlank(_db)) {
             throw new TDHSEncodeException("db can't be empty!");
         }
