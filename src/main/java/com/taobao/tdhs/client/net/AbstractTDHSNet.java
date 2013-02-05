@@ -42,22 +42,45 @@ public abstract class AbstractTDHSNet<T> implements TDHSNet {
 
     private NetParameters parameters;
 
-    private boolean shutdown = false;
+    private volatile boolean shutdown = false;
+
+    private volatile boolean needReconnect = true; //默认开启
 
     private Thread reconnectThread = new Thread(new Runnable() {
+
+        private long runTime = 0; //运行次数
+
         /**
          * Method run ...
          */
         public void run() {
             while (!shutdown) {
+                if (runTime > 0 && !needReconnect) {
+                    break;
+                }
                 int num = needConnectionNumber.get();
                 if (num > 0 && connectionPool.size() < parameters.getConnectionNumber()) {
                     for (int i = 0; i < num; i++) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            logger.error("sleep error!", e);
+                        }
+                        if (shutdown) {
+                            break;
+                        }
                         connect();
+                        if (shutdown) {
+                            break;
+                        }
                     }
                 }
+                runTime++;
+                if (shutdown) {
+                    break;
+                }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     logger.error("sleep error!", e);
                 }
@@ -99,12 +122,9 @@ public abstract class AbstractTDHSNet<T> implements TDHSNet {
         _initNet(parameters, shakeHandPacket, responses);
         needConnectionNumber.set(parameters.getConnectionNumber());
         connectionPool = new ConnectionPool<T>(parameters.getConnectionNumber());
-        for (int i = 0; i < parameters.getConnectionNumber(); i++) {
-            connect();
-        }
-        if (parameters.isNeedReconnect()) {
-            reconnectThread.start();
-        }
+        connect();
+        reconnectThread.start();
+        needReconnect = parameters.isNeedReconnect();
     }
 
     private boolean connect() {

@@ -14,6 +14,7 @@ package com.taobao.tdhs.client.common;
 import com.taobao.tdhs.client.protocol.TDHSProtocol;
 import com.taobao.tdhs.client.protocol.TDHSProtocolBinary;
 import com.taobao.tdhs.client.protocol.TDHSProtocolBinaryV2;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author <a href="mailto:wentong@taobao.com">文通</a>
@@ -52,7 +53,7 @@ public final class TDHSCommon {
          * @return ProtocolVersion
          */
         public static ProtocolVersion fromProp(String prop) {
-            if (prop.equals("2") || prop.equalsIgnoreCase("v2")) {
+            if (StringUtils.isNotBlank(prop) && (prop.equals("2") || prop.equalsIgnoreCase("v2"))) {
                 return V2;
             }
             return V1;
