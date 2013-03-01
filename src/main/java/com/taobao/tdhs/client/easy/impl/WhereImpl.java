@@ -98,4 +98,10 @@ public class WhereImpl implements Where {
         get.setKey(keys);
         return query;
     }
+
+    public Query between(String[]... keys) {
+        get.setFindFlag(TDHSCommon.FindFlag.TDHS_BETWEEN);
+        get.setKey(keys);
+        return query;
+    }
 }

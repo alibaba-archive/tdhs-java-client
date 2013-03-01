@@ -149,6 +149,10 @@ public class Get extends RequestWithCharset implements Request {
             filters.isValid(version);
         }
 
+        if (____find_flag == TDHSCommon.FindFlag.TDHS_BETWEEN.getValue() && _key.size() < 2) {
+            throw new TDHSEncodeException("between need at least 2 keys");
+        }
+
     }
 
 

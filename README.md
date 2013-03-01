@@ -9,7 +9,7 @@ If you are using maven to build your project,you can try it by:
     <dependency>
         <groupId>com.taobao</groupId>
         <artifactId>tdhs-java-client</artifactId>
-        <version>0.3.2.4</version>
+        <version>0.4.1</version>
     </dependency>
 
 

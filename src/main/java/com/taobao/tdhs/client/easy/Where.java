@@ -25,6 +25,7 @@ public interface Where {
      * assign the fields in the index
      *
      * @param field of type String...
+     *
      * @return Where
      */
     Where fields(String... field);
@@ -33,6 +34,7 @@ public interface Where {
      * assign the ndex
      *
      * @param index of type String
+     *
      * @return Where
      */
     Where index(String index);
@@ -41,6 +43,7 @@ public interface Where {
      * Method equal ...
      *
      * @param key of type String...
+     *
      * @return Query
      */
     Query equal(String... key);
@@ -49,6 +52,7 @@ public interface Where {
      * Method descEqual ...
      *
      * @param key of type String...
+     *
      * @return Query
      */
     Query descEqual(String... key);
@@ -57,6 +61,7 @@ public interface Where {
      * Method greaterEqual ...
      *
      * @param key of type String...
+     *
      * @return Query
      */
     Query greaterEqual(String... key);
@@ -65,6 +70,7 @@ public interface Where {
      * Method lessEqual ...
      *
      * @param key of type String...
+     *
      * @return Query
      */
     Query lessEqual(String... key);
@@ -73,6 +79,7 @@ public interface Where {
      * Method greaterThan ...
      *
      * @param key of type String...
+     *
      * @return Query
      */
     Query greaterThan(String... key);
@@ -81,6 +88,7 @@ public interface Where {
      * Method lessThan ...
      *
      * @param key of type String...
+     *
      * @return Query
      */
     Query lessThan(String... key);
@@ -89,6 +97,7 @@ public interface Where {
      * Method in ...
      *
      * @param keys of type String[]...
+     *
      * @return Query
      */
     Query in(String[]... keys);
@@ -97,8 +106,18 @@ public interface Where {
      * Method in ...
      *
      * @param keys of type List<String>...
+     *
      * @return Query
      */
     Query in(List<String>... keys);
+
+    /**
+     * Between query.
+     *
+     * @param keys the keys
+     *
+     * @return the query
+     */
+    Query between(String[]... keys);
 
 }

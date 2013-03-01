@@ -76,7 +76,7 @@ public final class TDHSCommon {
     }
 
     public enum FindFlag {
-        TDHS_EQ(0), TDHS_GE(1), TDHS_LE(2), TDHS_GT(3), TDHS_LT(4), TDHS_IN(5), TDHS_DEQ(6);
+        TDHS_EQ(0), TDHS_GE(1), TDHS_LE(2), TDHS_GT(3), TDHS_LT(4), TDHS_IN(5), TDHS_DEQ(6), TDHS_BETWEEN(7);
 
         private int value;
 
