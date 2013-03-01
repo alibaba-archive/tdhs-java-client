@@ -20,7 +20,7 @@
     <groupId>com.taobao</groupId>
     <artifactId>tdhs-java-client</artifactId>
     <name>tdhs4j</name>
-    <version>0.4.1</version>
+    <version>0.5-SNAPSHOT</version>
     <description>A TDH_SOCKET Client For Java</description>
     <url>https://github.com/taobao/tdhs-java-client/</url>
     <packaging>jar</packaging>
