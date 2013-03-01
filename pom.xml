@@ -40,9 +40,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:taobao/tdhs-java-client.git</connection>
-        <developerConnection>scm:git:git@github.com:taobao/tdhs-java-client.git</developerConnection>
-        <url>git@github.com:taobao/tdhs-java-client.git</url>
+        <connection>scm:git:git@github.com:alibaba/tdhs-java-client.git</connection>
+        <developerConnection>scm:git:git@github.com:alibaba/tdhs-java-client.git</developerConnection>
+        <url>git@github.com:alibaba/tdhs-java-client.git</url>
     </scm>
 
     <dependencies>
