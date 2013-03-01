@@ -10,7 +10,8 @@
   ~    wentong <wentong@taobao.com>
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -40,9 +41,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/trunk/</connection>
-        <developerConnection>scm:svn:http://code.taobao.org/svn/tdhs-java-client/trunk/</developerConnection>
-        <url>http://code.taobao.org/svn/tdhs-java-client/trunk/</url>
+        <connection>scm:git:git@github.com:taobao/tdhs-java-client.git</connection>
+        <developerConnection>scm:git:git@github.com:taobao/tdhs-java-client.git</developerConnection>
+        <url>git@github.com:taobao/tdhs-java-client.git</url>
     </scm>
 
     <dependencies>
