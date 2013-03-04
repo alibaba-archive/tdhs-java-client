@@ -114,10 +114,21 @@ public interface Where {
     /**
      * Between query.
      *
-     * @param keys the keys
+     * @param beforeKey the before key
+     * @param afterKey  the after key
      *
      * @return the query
      */
-    Query between(String[]... keys);
+    Query between(String[] beforeKey, String[] afterKey);
+
+    /**
+     * Between query.
+     *
+     * @param beforeKey the before key
+     * @param afterKey  the after key
+     *
+     * @return the query
+     */
+    Query between(List<String> beforeKey, List<String> afterKey);
 
 }

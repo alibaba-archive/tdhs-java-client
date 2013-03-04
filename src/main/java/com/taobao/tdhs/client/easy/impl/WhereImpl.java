@@ -99,9 +99,17 @@ public class WhereImpl implements Where {
         return query;
     }
 
-    public Query between(String[]... keys) {
+    public Query between(String[] beforeKey, String[] afterKey) {
         get.setFindFlag(TDHSCommon.FindFlag.TDHS_BETWEEN);
-        get.setKey(keys);
+        get.setKey(new String[][]{beforeKey, afterKey});
         return query;
     }
+
+    public Query between(List<String> beforeKey, List<String> afterKey) {
+        get.setFindFlag(TDHSCommon.FindFlag.TDHS_BETWEEN);
+        get.setKey(new String[][]{beforeKey.toArray(new String[beforeKey.size()]),
+                afterKey.toArray(new String[afterKey.size()])});
+        return query;
+    }
+
 }
